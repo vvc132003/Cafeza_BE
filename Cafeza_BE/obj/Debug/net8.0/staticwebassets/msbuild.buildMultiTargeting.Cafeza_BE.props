@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Cafeza_BE.props" />
+</Project>

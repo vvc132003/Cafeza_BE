@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35913.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cafeza_BE", "Cafeza_BE\Cafeza_BE.csproj", "{23B937CA-C3AF-408B-9908-6F0F51F2CA28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{35134226-2FD5-476C-AD71-AF8CDD8C967B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23B937CA-C3AF-408B-9908-6F0F51F2CA28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23B937CA-C3AF-408B-9908-6F0F51F2CA28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23B937CA-C3AF-408B-9908-6F0F51F2CA28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23B937CA-C3AF-408B-9908-6F0F51F2CA28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35134226-2FD5-476C-AD71-AF8CDD8C967B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35134226-2FD5-476C-AD71-AF8CDD8C967B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35134226-2FD5-476C-AD71-AF8CDD8C967B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35134226-2FD5-476C-AD71-AF8CDD8C967B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AA2D5E27-2CCA-42AF-8311-90AB9FE06847}
+	EndGlobalSection
+EndGlobal

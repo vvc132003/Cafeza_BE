@@ -1,0 +1,12 @@
+D:\Dự án quản lý cafe\Cafeza_BE\Model\bin\Debug\net8.0\Model.deps.json
+D:\Dự án quản lý cafe\Cafeza_BE\Model\bin\Debug\net8.0\Model.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Model\bin\Debug\net8.0\Model.pdb
+D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\Model.csproj.AssemblyReference.cache
+D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\Model.GeneratedMSBuildEditorConfig.editorconfig
+D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\Model.AssemblyInfoInputs.cache
+D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\Model.AssemblyInfo.cs
+D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\Model.csproj.CoreCompileInputs.cache
+D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\Model.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\refint\Model.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\Model.pdb
+D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\ref\Model.dll
