@@ -47,6 +47,22 @@
   },
   {
     "ContainingType": "Cafeza_BE.Controllers.DrinkController",
+    "Method": "Update",
+    "RelativePath": "api/Drink",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "updateDrink",
+        "Type": "Model.Drink",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.DrinkController",
     "Method": "GetById",
     "RelativePath": "api/Drink/{id}",
     "HttpMethod": "GET",
@@ -70,27 +86,6 @@
         "StatusCode": 200
       }
     ]
-  },
-  {
-    "ContainingType": "Cafeza_BE.Controllers.DrinkController",
-    "Method": "Update",
-    "RelativePath": "api/Drink/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "updatedDrink",
-        "Type": "Model.Drink",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
   },
   {
     "ContainingType": "Cafeza_BE.Controllers.DrinkController",

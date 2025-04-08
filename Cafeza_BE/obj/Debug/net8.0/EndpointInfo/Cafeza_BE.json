@@ -87,6 +87,35 @@
             }
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Drink"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Drink"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Drink"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Drink"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/api/Drink/{id}": {
@@ -129,47 +158,6 @@
           }
         }
       },
-      "put": {
-        "tags": [
-          "Drink"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "maxLength": 24,
-              "minLength": 24,
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Drink"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Drink"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Drink"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
       "delete": {
         "tags": [
           "Drink"
@@ -180,8 +168,6 @@
             "in": "path",
             "required": true,
             "schema": {
-              "maxLength": 24,
-              "minLength": 24,
               "type": "string"
             }
           }
@@ -255,6 +241,10 @@
       "DrinkDTO": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
           "sku": {
             "type": "string",
             "nullable": true

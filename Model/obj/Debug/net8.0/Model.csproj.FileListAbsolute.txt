@@ -10,3 +10,4 @@ D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\Model.dll
 D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\refint\Model.dll
 D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\Model.pdb
 D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\ref\Model.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Model\obj\Debug\net8.0\Model.sourcelink.json

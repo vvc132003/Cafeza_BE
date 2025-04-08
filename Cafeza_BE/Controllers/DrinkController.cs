@@ -62,19 +62,18 @@ namespace Cafeza_BE.Controllers
             };
         }
 
-        [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, Drink updatedDrink)
+        [HttpPut]
+        public IActionResult Update([FromBody] Drink updateDrink)
         {
-            var drink = _drink.Find(d => d.Id == id).FirstOrDefault();
-            if (drink == null)
-                return NotFound();
-
-            updatedDrink.Id = id; // đảm bảo ID đúng
-            _drink.ReplaceOne(d => d.Id == id, updatedDrink);
-            return NoContent();
+            //var drink = _drink.Find(d => d.Id == updateDrinkDTO.Id).FirstOrDefault();
+            //if (drink == null)
+            //    return NotFound();
+            //var updateDrink = ToEntity(updateDrinkDTO);
+            _drink.ReplaceOne(d => d.Id == updateDrink.Id, updateDrink);
+            return Ok(updateDrink);
         }
 
-        [HttpDelete("{id:length(24)}")]
+        [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
             var result = _drink.DeleteOne(d => d.Id == id);

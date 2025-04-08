@@ -49,6 +49,7 @@ namespace Model
     }
     public class DrinkDTO
     {
+        public string? Id { get; set; }
         public string Sku { get; set; }
         public string Name { get; set; }
         public string? CategoryId { get; set; }

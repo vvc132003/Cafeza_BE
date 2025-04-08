@@ -43,3 +43,4 @@ D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\obj\Debug\net8.0\refint\Cafeza_B
 D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\obj\Debug\net8.0\Cafeza_BE.pdb
 D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\obj\Debug\net8.0\Cafeza_BE.genruntimeconfig.cache
 D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\obj\Debug\net8.0\ref\Cafeza_BE.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\obj\Debug\net8.0\Cafeza_BE.sourcelink.json

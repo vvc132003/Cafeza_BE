@@ -13,7 +13,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins", builder =>
     {
-        builder.WithOrigins("http://localhost:4200", "http://192.168.1.6:4200")
+        builder.WithOrigins("http://localhost:4200", "http://192.168.1.3:4200")
                .AllowAnyMethod() // Cho phép tất cả các phương thức (GET, POST, PUT, DELETE, etc.)
                .AllowAnyHeader() // Cho phép tất cả các header
                .AllowCredentials(); // Cho phép thông tin xác thực

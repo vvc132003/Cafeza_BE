@@ -15,6 +15,11 @@ namespace Cafeza_BE.DB
         }
 
         public IMongoCollection<Drink> Drinks => _database.GetCollection<Drink>("Drinks");
+        public IMongoCollection<Category> Categorys => _database.GetCollection<Category>("Categorys");
+        public IMongoCollection<Table> Tables => _database.GetCollection<Table>("Tables");
+        public IMongoCollection<Customer> Customers => _database.GetCollection<Customer>("Customers");
+        public IMongoCollection<Employee> Employees => _database.GetCollection<Employee>("Employees");
+        public IMongoCollection<Order> Orders => _database.GetCollection<Order>("Orders");
 
     }
 }
