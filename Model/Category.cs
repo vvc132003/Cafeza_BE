@@ -23,6 +23,9 @@ namespace Model
         public bool? ShowOnHome { get; set; } = false;
         public string? Icon { get; set; }
         public string? ColorCode { get; set; }
+        public int? ViewCount { get; set; }
+        public string? ParentId { get; set; }
+        public string? Notes { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }
@@ -39,6 +42,9 @@ namespace Model
         public bool? ShowOnHome { get; set; } = false;
         public string? Icon { get; set; }
         public string? ColorCode { get; set; }
+        public int? ViewCount { get; set; }
+        public string? ParentId { get; set; }
+        public string? Notes { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }
