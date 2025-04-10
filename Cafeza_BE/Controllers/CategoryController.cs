@@ -42,7 +42,7 @@ namespace Cafeza_BE.Controllers
 
             var entity = ToEntity(categoryDto);
             await _category.InsertOneAsync(entity);
-            return Ok(new { message = "Thêm thành công", data = entity });
+            return Ok(entity);
         }
 
 
@@ -51,6 +51,7 @@ namespace Cafeza_BE.Controllers
             return new Category
             {
                 Name = dto.Name,
+                Code = dto.Code,
                 Description = dto.Description,
                 IsActive = dto.IsActive,
                 DisplayOrder = dto.DisplayOrder,
@@ -66,6 +67,26 @@ namespace Cafeza_BE.Controllers
                 CreatedAt = dto.CreatedAt ?? DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
+        }
+
+        [HttpPut]
+        public IActionResult Update([FromBody] Category updateCategory)
+        {
+            //var drink = _drink.Find(d => d.Id == updateDrinkDTO.Id).FirstOrDefault();
+            //if (drink == null)
+            //    return NotFound();
+            //var updateDrink = ToEntity(updateDrinkDTO);
+            _category.ReplaceOne(d => d.Id == updateCategory.Id, updateCategory);
+            return Ok(updateCategory);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(string id)
+        {
+            var result = _category.DeleteOne(d => d.Id == id);
+            if (result.DeletedCount == 0)
+                return NotFound();
+            return NoContent();
         }
 
     }
