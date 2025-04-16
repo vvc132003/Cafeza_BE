@@ -1,5 +1,7 @@
 ﻿using Cafeza_BE;
 using Cafeza_BE.DB;
+using Cafeza_BE.Hub;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MongoDBSettings>(
@@ -13,13 +15,14 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins", builder =>
     {
-        builder.WithOrigins("http://localhost:4200", "http://192.168.1.3:4200")
+        builder.WithOrigins("http://localhost:4200", "http://192.168.1.7:4200")
                .AllowAnyMethod() // Cho phép tất cả các phương thức (GET, POST, PUT, DELETE, etc.)
                .AllowAnyHeader() // Cho phép tất cả các header
                .AllowCredentials(); // Cho phép thông tin xác thực
 
     });
 });
+builder.Services.AddSignalR();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,5 +44,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<SignalRHub>("/signalrHub");
+
 
 app.Run();

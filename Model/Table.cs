@@ -15,13 +15,14 @@ namespace Model
         public string Id { get; set; }
         public string? TableName { get; set; }
         public int? Capacity { get; set; } // số lượng người ngồi
-        public string? Status { get; set; } = "Available";
+        public string? Status { get; set; }
         public string? Type { get; set; }
         public string? Location { get; set; } /// khu vực
         public string? Note { get; set; }
-        public bool? IsDeleted { get; set; } = false;
-        public bool IsReservable { get; set; } = true; // cho phép đặt chổ online
+        public bool? IsDeleted { get; set; } 
+        public bool? IsReservable { get; set; } // cho phép đặt chổ online
         public List<string>? Tags { get; set; }
+        public string? ParentId { get; set; }
         public TimeSpan? ReservedFrom { get; set; }  // Giờ bắt đầu giữ bàn
         public TimeSpan? ReservedTo { get; set; }   // Giờ kết thúc giữ bàn
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
@@ -33,13 +34,14 @@ namespace Model
         public string? Id { get; set; }
         public string? TableName { get; set; }
         public int? Capacity { get; set; } // số lượng người ngồi
-        public string? Status { get; set; } = "Available";
+        public string? Status { get; set; }
         public string? Type { get; set; }
         public string? Location { get; set; } /// khu vực
         public string? Note { get; set; }
-        public bool? IsDeleted { get; set; } = false;
-        public bool IsReservable { get; set; } = true; // cho phép đặt chổ online
+        public bool? IsDeleted { get; set; }
+        public bool? IsReservable { get; set; } // cho phép đặt chổ online
         public List<string>? Tags { get; set; }
+        public string? ParentId { get; set; }
         public TimeSpan? ReservedFrom { get; set; }  // Giờ bắt đầu giữ bàn
         public TimeSpan? ReservedTo { get; set; }   // Giờ kết thúc giữ bàn
         public DateTime? CreatedAt { get; set; } = DateTime.Now;

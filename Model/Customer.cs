@@ -19,6 +19,7 @@ namespace Model
         public string? Password { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string? Gender { get; set; } // "Nam", "Nữ", "Khác"
+        public string? Address { get; set; }
         public string? MembershipLevel { get; set; } = "Thường"; // Thường, Bạc, Vàng, Kim cương
         public int? RewardPoints { get; set; } = 0;
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
@@ -35,6 +36,7 @@ namespace Model
         public string? Password { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string? Gender { get; set; } // "Nam", "Nữ", "Khác"
+        public string? Address { get; set; }
         public string? MembershipLevel { get; set; } = "Thường"; // Thường, Bạc, Vàng, Kim cương
         public int? RewardPoints { get; set; } = 0;
         public DateTime? CreatedAt { get; set; } = DateTime.Now;

@@ -44,3 +44,11 @@ D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\obj\Debug\net8.0\Cafeza_BE.pdb
 D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\obj\Debug\net8.0\Cafeza_BE.genruntimeconfig.cache
 D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\obj\Debug\net8.0\ref\Cafeza_BE.dll
 D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\obj\Debug\net8.0\Cafeza_BE.sourcelink.json
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.Extensions.Hosting.Abstractions.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.Extensions.ObjectPool.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Newtonsoft.Json.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\System.Net.WebSockets.WebSocketProtocol.dll
