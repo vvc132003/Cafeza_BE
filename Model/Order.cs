@@ -13,16 +13,28 @@ namespace Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        [BsonElement("CustomerId")]
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
+        public string? Code { get; set; } 
         public string? CustomerId { get; set; }   // Có thể null nếu khách lẻ
-        [BsonElement("EmployeeId")]
         public string? EmployeeId { get; set; }   // Người tạo đơn
-        [BsonElement("TableId")]
         public string? TableId { get; set; }      // Bàn nào (nếu tại quán)
-        public decimal TotalAmount { get; set; }
-        public string PaymentMethod { get; set; } = "Tiền mặt"; // "Tiền mặt", "Chuyển khoản", "Momo"
-        public string Status { get; set; } = "Chờ thanh toán"; // "Đã thanh toán", "Đã huỷ", "Đang xử lý"
+        public decimal? TotalAmount { get; set; }
+        public string? PaymentMethod { get; set; } = "Tiền mặt"; // "Tiền mặt", "Chuyển khoản", "Momo"
+        public string? Status { get; set; } // Chờ thanh toán"  "Đã thanh toán", "Đã huỷ", "Đang xử lý"
+        public string? Note { get; set; } // Ghi chú thêm
+    }
+
+    public class OrderDTO
+    {
+        public string? Id { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
+        public string? Code { get; set; }
+        public string? CustomerId { get; set; }   // Có thể null nếu khách lẻ
+        public string? EmployeeId { get; set; }   // Người tạo đơn
+        public string? TableId { get; set; }      // Bàn nào (nếu tại quán)
+        public decimal? TotalAmount { get; set; }
+        public string? PaymentMethod { get; set; } // "Tiền mặt"; // "Tiền mặt", "Chuyển khoản", "Momo"
+        public string? Status { get; set; } // Chờ thanh toán"  "Đã thanh toán", "Đã huỷ", "Đang xử lý"
         public string? Note { get; set; } // Ghi chú thêm
     }
 

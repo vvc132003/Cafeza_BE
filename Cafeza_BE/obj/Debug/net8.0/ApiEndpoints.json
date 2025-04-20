@@ -162,6 +162,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Cafeza_BE.Controllers.OrderController",
+    "Method": "CreateOrder",
+    "RelativePath": "api/Order",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderDTO",
+        "Type": "Model.OrderDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.OrderController",
+    "Method": "GetOrdersByTableId",
+    "RelativePath": "api/Order/table/{tableId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tableId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Cafeza_BE.Controllers.TableController",
     "Method": "GetAllTables",
     "RelativePath": "api/Table",
