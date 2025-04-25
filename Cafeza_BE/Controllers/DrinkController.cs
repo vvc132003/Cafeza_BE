@@ -1,4 +1,5 @@
-﻿using Cafeza_BE.DB;
+﻿using System.Threading.Tasks;
+using Cafeza_BE.DB;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Model;
@@ -11,9 +12,12 @@ namespace Cafeza_BE.Controllers
     public class DrinkController : ControllerBase
     {
         private readonly IMongoCollection<Drink> _drink;
+        private readonly IMongoCollection<Category> _category;
+
 
         public DrinkController(MongoDbContext context) {
             _drink = context.Drinks;
+            _category = context.Categorys;
         }
 
         [HttpGet]
@@ -24,6 +28,36 @@ namespace Cafeza_BE.Controllers
 
             }
             return Ok(drinks);
+        }
+
+        [HttpGet("drink-list")]
+        public async Task<ActionResult<List<object>>> DrinkList()
+        {
+            var categorys =  await _category.Find(c=>true).ToListAsync();
+            var data = new List<object>();
+            foreach (var category in categorys) {
+                var drinks = await _drink.Find(d => d.CategoryId == category.Id).ToListAsync();
+                data.Add(new
+                {
+                    Category = category.Name,  
+                    Drinks = drinks       
+                });
+            }
+            return Ok(data);
+        }
+
+        private class ExtenDrinks
+        {
+            public string? Id { get; set; }
+            public string Sku { get; set; }
+            public string Name { get; set; }
+            public string? CategoryId { get; set; }
+            public decimal Price { get; set; }
+            public string Description { get; set; }
+            public string? ImagePath { get; set; }
+            public int Quantity { get; set; }
+            public string Status { get; set; }  // "available", "out_of_stock", "discontinued"
+            public string Size { get; set; }    // "small", "medium", "large"
         }
 
         //public class Drinkand
