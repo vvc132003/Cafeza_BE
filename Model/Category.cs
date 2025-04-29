@@ -16,15 +16,13 @@ namespace Model
         public string Code { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
+        public string? DisplayName { get; set; }
         public bool? IsActive { get; set; } = true;
         public int? DisplayOrder { get; set; } = 0;
-        public string? ImageUrl { get; set; }
-        public List<string>? Tags { get; set; }
         public string? Slug { get; set; }
         public bool? ShowOnHome { get; set; } = false;
         public string? Icon { get; set; }
         public string? ColorCode { get; set; }
-        public int? ViewCount { get; set; }
         public string? ParentId { get; set; }
         public string? Notes { get; set; }
         public DateTime? CreatedAt { get; set; }
@@ -36,15 +34,13 @@ namespace Model
         public string Code { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
+        public string? DisplayName { get; set; }
         public bool? IsActive { get; set; } = true;
         public int? DisplayOrder { get; set; } = 0;
-        public string? ImageUrl { get; set; }
-        public List<string>? Tags { get; set; }
         public string? Slug { get; set; }
         public bool? ShowOnHome { get; set; } = false;
         public string? Icon { get; set; }
         public string? ColorCode { get; set; }
-        public int? ViewCount { get; set; }
         public string? ParentId { get; set; }
         public string? Notes { get; set; }
         public DateTime? CreatedAt { get; set; }

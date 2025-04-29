@@ -13,44 +13,26 @@ namespace Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-
-        [BsonElement("sku")]
         public string Sku { get; set; }
-
-        [BsonElement("name")]
+        public string? Slug { get; set; }
         public string Name { get; set; }
-
-        [BsonElement("categoryId")]
         public string? CategoryId { get; set; }
-
-        [BsonElement("price")]
         public decimal Price { get; set; }
-
-        [BsonElement("description")]
         public string Description { get; set; }
-
-        [BsonElement("imagePath")]
         public string? ImagePath { get; set; }
-
-        [BsonElement("quantity")]
         public int Quantity { get; set; }
-
-        [BsonElement("status")]
         public string Status { get; set; } // "available", "out_of_stock", "discontinued"
-
-        [BsonElement("size")]
         public string Size { get; set; } // "small", "medium", "large"
-
-        [BsonElement("createdAt")]
+        public int? ViewCount { get; set; }
+        public List<string>? Tags { get; set; }
         public DateTime? CreatedAt { get; set; } 
-
-        [BsonElement("updatedAt")]
         public DateTime? UpdatedAt { get; set; } 
     }
     public class DrinkDTO
     {
         public string? Id { get; set; }
         public string Sku { get; set; }
+        public string? Slug { get; set; }
         public string Name { get; set; }
         public string? CategoryId { get; set; }
         public decimal Price { get; set; }
@@ -59,6 +41,8 @@ namespace Model
         public int Quantity { get; set; }
         public string Status { get; set; }  // "available", "out_of_stock", "discontinued"
         public string Size { get; set; }    // "small", "medium", "large"
+        public int? ViewCount { get; set; }
+        public List<string>? Tags { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }

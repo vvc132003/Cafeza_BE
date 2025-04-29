@@ -33,13 +33,17 @@ namespace Cafeza_BE.Controllers
         [HttpGet("drink-list")]
         public async Task<ActionResult<List<object>>> DrinkList()
         {
-            var categorys =  await _category.Find(c=>true).ToListAsync();
+            var categorys =  await _category.Find(c=>c.ShowOnHome == true).ToListAsync();
+            if (categorys == null || categorys.Count == 0)
+            {
+                return Ok(null);
+            }
             var data = new List<object>();
             foreach (var category in categorys) {
-                var drinks = await _drink.Find(d => d.CategoryId == category.Id).ToListAsync();
+                var drinks = await _drink.Find(d => d.CategoryId == category.Id && d.Status != "discontinued").ToListAsync();
                 data.Add(new
                 {
-                    Category = category.Name,  
+                    Category = category.DisplayName,  
                     Drinks = drinks       
                 });
             }
@@ -49,7 +53,7 @@ namespace Cafeza_BE.Controllers
         private class ExtenDrinks
         {
             public string? Id { get; set; }
-            public string Sku { get; set; }
+            public string Code { get; set; }
             public string Name { get; set; }
             public string? CategoryId { get; set; }
             public decimal Price { get; set; }
@@ -83,6 +87,7 @@ namespace Cafeza_BE.Controllers
             return new Drink
             {
                 Sku = drinkDTO.Sku,
+                Slug = drinkDTO.Slug,
                 Name = drinkDTO.Name,
                 CategoryId = drinkDTO.CategoryId,
                 Price = drinkDTO.Price,
@@ -91,6 +96,7 @@ namespace Cafeza_BE.Controllers
                 Quantity = drinkDTO.Quantity,
                 Status = drinkDTO.Status,
                 Size = drinkDTO.Size,
+                ViewCount= drinkDTO.ViewCount,
                 CreatedAt = drinkDTO.CreatedAt,
                 UpdatedAt = drinkDTO.UpdatedAt
             };
