@@ -182,6 +182,48 @@
     ]
   },
   {
+    "ContainingType": "Cafeza_BE.Controllers.EmployeeController",
+    "Method": "Create",
+    "RelativePath": "api/Employee",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newEmployeedto",
+        "Type": "Model.EmployeeDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Model.Employee",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.EmployeeController",
+    "Method": "Login",
+    "RelativePath": "api/Employee/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "login",
+        "Type": "Cafeza_BE.Controllers.EmployeeController\u002BUserLoginModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Cafeza_BE.Controllers.OrderController",
     "Method": "CreateOrder",
     "RelativePath": "api/Order",

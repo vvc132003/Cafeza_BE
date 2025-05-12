@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Cafeza_BE.DB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Model;
@@ -20,6 +21,7 @@ namespace Cafeza_BE.Controllers
             _category = context.Categorys;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public ActionResult<List<Drink>> GetAll()
         {

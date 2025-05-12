@@ -52,3 +52,12 @@ D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.Exten
 D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
 D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Newtonsoft.Json.dll
 D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\System.Net.WebSockets.WebSocketProtocol.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.Bcl.TimeProvider.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+D:\Dự án quản lý cafe\Cafeza_BE\Cafeza_BE\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll

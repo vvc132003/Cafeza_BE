@@ -13,6 +13,7 @@ namespace Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+        public string? Code { get; set; }
         public string? FullName { get; set; }
         public string? Gender { get; set; } // "Nam", "Nữ", "Khác"
         public DateTime? DateOfBirth { get; set; }
@@ -35,6 +36,7 @@ namespace Model
     public class EmployeeDTO
     {
         public string? Id { get; set; }
+        public string? Code { get; set; }
         public string? FullName { get; set; }
         public string? Gender { get; set; } // "Nam", "Nữ", "Khác"
         public DateTime? DateOfBirth { get; set; }
