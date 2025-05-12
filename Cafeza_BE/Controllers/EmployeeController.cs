@@ -69,13 +69,13 @@ namespace Cafeza_BE.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginModel login)
         {
-            var user = Authenticate(login.Email, login.Password);
+            var employee = Authenticate(login.Email, login.Password);
 
-            if (user == null)
+            if (employee == null)
             {
                 return Unauthorized(new { message = "Invalid username or password" });
             }
-            string token = GenerateJwtToken(user);
+            string token = GenerateJwtToken(employee);
             return Ok(new { Token = token });
             //return Ok(new { message = "Login successful" });
 
@@ -85,28 +85,28 @@ namespace Cafeza_BE.Controllers
             public string Email { get; set; }
             public string Password { get; set; }
         }
-        private Employees Authenticate(string email, string password)
+        private Employee Authenticate(string email, string password)
         {
-            var employee = _employees.FirstOrDefault(user => user.Email == email && user.Password == password);
-            //var employee = _employee.Find(user => user.Email == email && user.Password == password).FirstOrDefault();
+            //var employee = _employees.FirstOrDefault(user => user.Email == email && user.Password == password);
+            var employee = _employee.Find(user => user.Email == email && user.Password == password).FirstOrDefault();
             return employee;
         }
 
-        private string GenerateJwtToken(Employees employee)
+        private string GenerateJwtToken(Employee employee)
         {
             var claims = new List<Claim>
     {
         new Claim(JwtRegisteredClaimNames.Sub, employee.Email),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim("id", employee.Email),
-            new Claim(ClaimTypes.Role, employee.Roles)
+            //new Claim(ClaimTypes.Role, employee.Roles)
     };
 
-            //// thêm từng quyền (role) làm claim
-            //foreach (var role in employee.Roles)
-            //{
-            //    claims.Add(new Claim(ClaimTypes.Role, role));
-            //}
+            // thêm từng quyền (role) làm claim
+            foreach (var role in employee.Roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("[}61L3B>z?XvzH&#!jH?b_RJ=K£lh-J7TO~c+i"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

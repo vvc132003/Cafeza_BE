@@ -23,6 +23,7 @@ namespace Model
         public string? MembershipLevel { get; set; } = "Thường"; // Thường, Bạc, Vàng, Kim cương
         public int? RewardPoints { get; set; } = 0;
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
+        public string? Role { get; set; }
         public bool? IsDeleted { get; set; } = false;
         public string? Note { get; set; }   // Ghi chú: "Khách VIP", "Hay complain" 😅
 
@@ -40,6 +41,7 @@ namespace Model
         public string? MembershipLevel { get; set; } = "Thường"; // Thường, Bạc, Vàng, Kim cương
         public int? RewardPoints { get; set; } = 0;
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
+        public string? Role { get; set; }
         public bool? IsDeleted { get; set; } = false;
         public string? Note { get; set; }   // Ghi chú: "Khách VIP", "Hay complain" 😅
 
