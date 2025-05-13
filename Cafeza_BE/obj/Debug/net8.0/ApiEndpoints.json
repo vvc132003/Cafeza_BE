@@ -232,8 +232,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "orderDTO",
-        "Type": "Model.OrderDTO",
+        "Name": "request",
+        "Type": "Cafeza_BE.Controllers.OrderController\u002BCreateOrderRequest",
         "IsRequired": true
       }
     ],
@@ -249,6 +249,38 @@
     "Parameters": [
       {
         "Name": "tableId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.OrderDetailController",
+    "Method": "CreateOrderDetail",
+    "RelativePath": "api/OrderDetail",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Cafeza_BE.Controllers.OrderDetailController\u002BCreateOrderDetailRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.OrderDetailController",
+    "Method": "GetOrdersByOrderId",
+    "RelativePath": "api/OrderDetail/orderId/{orderId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderId",
         "Type": "System.String",
         "IsRequired": true
       }

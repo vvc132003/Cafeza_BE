@@ -45,7 +45,7 @@ namespace Cafeza_BE.Controllers
             var employee = await _employee.Find(x => x.Id == order.EmployeeId).FirstOrDefaultAsync();
             data.Add(new ExtenOrder
             {
-                Id = order.Id,
+                OrderId = order.Id,
                 Code = order.Code,
                 TableId = tableId,
                 TableName = table.TableName,
@@ -59,7 +59,7 @@ namespace Cafeza_BE.Controllers
 
         public class ExtenOrder
         {
-            public string? Id { get; set; }
+            public string? OrderId { get; set; }
             public string? Code { get; set; }
             public string? TableId { get; set; }
             public string? TableName { get; set; }
@@ -69,20 +69,38 @@ namespace Cafeza_BE.Controllers
             public DateTime? CreatedAt { get; set; }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] OrderDTO orderDTO)
+        public class CreateOrderRequest
         {
-            var entity = ToEntity(orderDTO);
-            await _order.InsertOneAsync(entity);
-            var table = _table.Find(d => d.Id == orderDTO.TableId).FirstOrDefault();
+            public OrderDTO? OrderDto { get; set; }
+            public CustomerDTO? CustomerDto { get; set; }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request)
+        {
+            // add customer
+            if(request.CustomerDto != null)
+            {
+                var entityCustomer = ToEntityCustomer(request.CustomerDto);
+                await _customer.InsertOneAsync(entityCustomer);
+                request.OrderDto.CustomerId = entityCustomer.Id;
+            }
+            // add order 
+            var entityOrder = ToEntityOrder(request.OrderDto);
+            await _order.InsertOneAsync(entityOrder);
+
+            // update bàn
+            var table = _table.Find(d => d.Id == request.OrderDto.TableId).FirstOrDefault();
             table.Status = "occupied";
             await _table.ReplaceOneAsync(d => d.Id == table.Id, table);
             await _hubContext.Clients.All.SendAsync("loadTable", table);
-            return Ok(entity);
+            return Ok(entityOrder);
         }
 
-        private Order ToEntity(OrderDTO dto)
+        private Order ToEntityOrder(OrderDTO dto)
         {
+            if (dto == null) return null;
             return new Order
             {
                 CreatedAt = DateTime.Now,
@@ -94,6 +112,28 @@ namespace Cafeza_BE.Controllers
                 PaymentMethod = dto.PaymentMethod,
                 Status = "Chờ thanh toán",
                 Note = dto.Note
+            };
+        }
+
+        private Customer ToEntityCustomer(CustomerDTO dto)
+        {
+            if (dto == null) return null;
+
+            return new Customer
+            {
+                FullName = dto.FullName ?? null,
+                PhoneNumber = dto.PhoneNumber ?? null,
+                Email = dto.Email ?? null,
+                Password = dto.Password ?? null,
+                DateOfBirth = dto.DateOfBirth ?? null,
+                Gender = dto.Gender ?? null,
+                Address = dto.Address ?? null,
+                MembershipLevel = dto.MembershipLevel ?? "Thường",
+                RewardPoints = dto.RewardPoints ?? 0,
+                CreatedAt = dto.CreatedAt ?? DateTime.Now,
+                Role = dto.Role ?? null,
+                IsDeleted = dto.IsDeleted ?? false,
+                Note = dto.Note ?? null
             };
         }
 

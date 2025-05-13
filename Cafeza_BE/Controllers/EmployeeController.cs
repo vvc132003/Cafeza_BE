@@ -98,7 +98,7 @@ namespace Cafeza_BE.Controllers
     {
         new Claim(JwtRegisteredClaimNames.Sub, employee.Email),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim("id", employee.Email),
+            new Claim("id", employee.Id),
             //new Claim(ClaimTypes.Role, employee.Roles)
     };
 

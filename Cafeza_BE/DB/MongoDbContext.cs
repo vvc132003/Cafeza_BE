@@ -20,6 +20,8 @@ namespace Cafeza_BE.DB
         public IMongoCollection<Customer> Customers => _database.GetCollection<Customer>("Customers");
         public IMongoCollection<Employee> Employees => _database.GetCollection<Employee>("Employees");
         public IMongoCollection<Order> Orders => _database.GetCollection<Order>("Orders");
+        public IMongoCollection<OrderDetail> OrderDetails => _database.GetCollection<OrderDetail>("OrderDetails");
+
 
     }
 }
