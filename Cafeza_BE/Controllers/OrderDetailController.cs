@@ -1,4 +1,5 @@
-﻿using Cafeza_BE.DB;
+﻿using System.Threading.Tasks;
+using Cafeza_BE.DB;
 using Cafeza_BE.Hub;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -73,10 +74,14 @@ namespace Cafeza_BE.Controllers
                 return null;
             }
             var orderdetail = await _orderDetail.Find(or => or.OrderId == request.OrderDetailDto.OrderId && or.DrinkId == request.OrderDetailDto.DrinkId).FirstOrDefaultAsync();
-            if(orderdetail == null) {
+            var drink = await _drink.Find(dr => dr.Id == request.OrderDetailDto.DrinkId).FirstOrDefaultAsync();
+            drink.Quantity -= 1;
+            await _drink.ReplaceOneAsync(x => x.Id == drink.Id, drink);
+            if (orderdetail == null) {
                 var entityOrderdetail = ToEntity(request.OrderDetailDto);
                 await _orderDetail.InsertOneAsync(entityOrderdetail);
                 var result = ToExtenOrderDetail(entityOrderdetail, request.drinkDTO);
+                await _hubContext.Clients.Group(entityOrderdetail.OrderId).SendAsync("LoadOrderId", result);
                 return Ok(result);
 
             }
@@ -86,20 +91,56 @@ namespace Cafeza_BE.Controllers
                 orderdetail.Total = orderdetail.UnitPrice * orderdetail.Quantity;
                 await _orderDetail.ReplaceOneAsync(x => x.Id == orderdetail.Id, orderdetail);
                 var result = ToExtenOrderDetail(orderdetail, request.drinkDTO);
+                await _hubContext.Clients.Group(orderdetail.OrderId).SendAsync("LoadOrderId", result);
                 return Ok(result);
-
-
             }
 
         }
-        private ExtenOrderDetail ToExtenOrderDetail(OrderDetail entity, DrinkDTO drink)
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
         {
+            var orderdetail = await _orderDetail.Find(or => or.Id == id).FirstOrDefaultAsync();
+            var drink = await _drink.Find(dr => dr.Id == orderdetail.DrinkId).FirstOrDefaultAsync();
+            if (orderdetail.Quantity > 1)
+            {
+                orderdetail.Quantity -= 1;
+                orderdetail.Total = orderdetail.UnitPrice * orderdetail.Quantity;
+                await _orderDetail.ReplaceOneAsync(x => x.Id == orderdetail.Id, orderdetail);
+                drink.Quantity += 1;
+                await _drink.ReplaceOneAsync(x => x.Id == drink.Id, drink);
+                var result = ToExtenOrderDetail(orderdetail, drink);
+                await _hubContext.Clients.Group(orderdetail.OrderId).SendAsync("LoadOrderId", result);
+            }
+            else
+            {
+                await _orderDetail.DeleteOneAsync(x => x.Id == orderdetail.Id);
+                drink.Quantity += 1;
+                await _drink.ReplaceOneAsync(x => x.Id == drink.Id, drink);
+                var result = ToExtenOrderDetail(orderdetail, drink);    
+                await _hubContext.Clients.Group(orderdetail.OrderId).SendAsync("RemoveOrderDetailId", result);
+            }
+            
+
+            return NoContent();
+        }
+
+        private ExtenOrderDetail ToExtenOrderDetail(OrderDetail entity, object drink)
+        {
+            string drinkName = null;
+
+            if (drink is DrinkDTO drinkDto)
+                drinkName = drinkDto.Name;
+            else if (drink is Drink drinkEntity)
+                drinkName = drinkEntity.Name;
+
             return new ExtenOrderDetail
             {
                 OrderdetailId = entity.Id,
                 OrderId = entity.OrderId,
                 DrinkId = entity.DrinkId,
-                DrinkName = drink.Name,
+                DrinkName = drinkName,
                 Quantity = entity.Quantity,
                 UnitPrice = entity.UnitPrice,
                 Total = entity.Total,

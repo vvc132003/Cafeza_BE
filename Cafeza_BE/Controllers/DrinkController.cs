@@ -1,10 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Cafeza_BE.DB;
+using Cafeza_BE.Hub;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Model;
 using MongoDB.Driver;
+using SharpCompress.Common;
 
 namespace Cafeza_BE.Controllers
 {
@@ -14,11 +17,14 @@ namespace Cafeza_BE.Controllers
     {
         private readonly IMongoCollection<Drink> _drink;
         private readonly IMongoCollection<Category> _category;
+        private readonly IHubContext<SignalRHub> _hubContext;
 
 
-        public DrinkController(MongoDbContext context) {
+        public DrinkController(MongoDbContext context, IHubContext<SignalRHub> hubContext)
+        {
             _drink = context.Drinks;
             _category = context.Categorys;
+            _hubContext = hubContext;
         }
 
         [Authorize(Roles = "Admin")]
@@ -26,9 +32,9 @@ namespace Cafeza_BE.Controllers
         public ActionResult<List<Drink>> GetAll()
         {
             var drinks = _drink.Find(d => true).ToList();
-            foreach (var drink in drinks) {
+            //foreach (var drink in drinks) {
 
-            }
+            //}
             return Ok(drinks);
         }
 
@@ -78,10 +84,12 @@ namespace Cafeza_BE.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Drink> Create([FromBody] DrinkDTO newDrinkDTO)
+        public async Task<IActionResult> Create([FromBody] DrinkDTO newDrinkDTO)
         {
             var newDrink = ToEntity(newDrinkDTO);
             _drink.InsertOne(newDrink);
+            await _hubContext.Clients.All.SendAsync("loadDrink", newDrink);
+
             return Ok(newDrink);
         }
         private Drink ToEntity(DrinkDTO drinkDTO)
