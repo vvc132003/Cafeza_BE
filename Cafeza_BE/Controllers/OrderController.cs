@@ -15,6 +15,9 @@ namespace Cafeza_BE.Controllers
     {
         private readonly IMongoCollection<Table> _table;
         private readonly IMongoCollection<Order> _order;
+        private readonly IMongoCollection<OrderDetail> _orderdetail;
+        private readonly IMongoCollection<Drink> _drink;
+
         private readonly IMongoCollection<Customer> _customer;
         private readonly IMongoCollection<Employee> _employee;
         private readonly IHubContext<SignalRHub> _hubContext;
@@ -26,6 +29,8 @@ namespace Cafeza_BE.Controllers
             _order = context.Orders;
             _customer = context.Customers;
             _employee = context.Employees;
+            _orderdetail = context.OrderDetails;
+            _drink = context.Drinks;
         }
 
 
@@ -96,6 +101,38 @@ namespace Cafeza_BE.Controllers
             await _table.ReplaceOneAsync(d => d.Id == table.Id, table);
             await _hubContext.Clients.All.SendAsync("loadTable", table);
             return Ok(entityOrder);
+        }
+
+        [HttpGet("updateCancelOrder/{orderId}")]
+        public async Task<IActionResult> UpdateCancelOrder(string orderId)
+        {
+            var order = await _order.Find(o => o.Id == orderId).FirstOrDefaultAsync();
+            order.Status = "Đã huỷ";
+            await _order.ReplaceOneAsync(d => d.Id == order.Id, order);
+            var table = _table.Find(d => d.Id == order.TableId).FirstOrDefault();
+            table.Status = "empty";
+            await _table.ReplaceOneAsync(d => d.Id == table.Id, table);
+
+            var orderdetails = await _orderdetail.Find(or => or.OrderId == orderId).ToListAsync();
+            if(orderdetails != null)
+            {
+                var drinkIds = orderdetails.Select(od => od.DrinkId).Distinct().ToList();
+                var drinks = await _drink.Find(d => drinkIds.Contains(d.Id)).ToListAsync();
+
+                var drinkDict = drinks.ToDictionary(d => d.Id);
+
+                foreach (var orderdetail in orderdetails)
+                {
+                    if (drinkDict.TryGetValue(orderdetail.DrinkId, out var drink))
+                    {
+                        drink.Quantity += orderdetail.Quantity;
+                        await _drink.ReplaceOneAsync(d => d.Id == drink.Id, drink);
+                    }
+                }
+            }
+
+            await _hubContext.Clients.All.SendAsync("loadTable", table);
+            return Ok(order);
         }
 
         private Order ToEntityOrder(OrderDTO dto)

@@ -13,18 +13,69 @@ namespace Cafeza_BE.Controllers
     public class TableController : ControllerBase
     {
         private readonly IMongoCollection<Table> _table;
+        private readonly IMongoCollection<Order> _order;
+        private readonly IMongoCollection<OrderDetail> _orderDetail;
+        private readonly IMongoCollection<Drink> _drink;
+        private readonly IMongoCollection<Customer> _customer;
+        private readonly IMongoCollection<Employee> _employee;
         private readonly IHubContext<SignalRHub> _hubContext;
 
         public TableController(MongoDbContext context, IHubContext<SignalRHub> hubContext)
         {
             _table = context.Tables;
             _hubContext = hubContext;
+            _order = context.Orders;
+            _customer = context.Customers;
+            _employee = context.Employees;
+            _orderDetail = context.OrderDetails;
+            _drink = context.Drinks;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllTables()
         {
-                var tables = await _table.Find(_ => true).ToListAsync();
-                return Ok(tables);
+            var tables = await _table.Find(_ => true).ToListAsync();
+
+            var data = new List<object>();
+
+            foreach (var table in tables)
+            {
+                var order = await _order.Find(o => o.TableId == table.Id).FirstOrDefaultAsync();
+                var orderDetails = order != null
+                    ? await _orderDetail.Find(od => od.OrderId == order.Id).ToListAsync()
+                    : new List<OrderDetail>();
+
+                var totalQuantity = orderDetails.Sum(od => od.Quantity);
+                var total = orderDetails.Sum(od => od.Total);
+
+                var customer = order?.CustomerId != null
+                    ? await _customer.Find(c => c.Id == order.CustomerId).FirstOrDefaultAsync()
+                    : null;
+
+                data.Add(new ExtenTable
+                {
+                    Id = table.Id,
+                    Capacity = table.Capacity,
+                    CreatedAt = table.CreatedAt,
+                    IsDeleted = table.IsDeleted,
+                    IsReservable = table.IsReservable,
+                    Location = table.Location,
+                    Note = table.Note,
+                    ParentId = table.ParentId,
+                    ReservedFrom = table.ReservedFrom,
+                    ReservedTo = table.ReservedTo,
+                    Status = table.Status,
+                    TableName = table.TableName,
+                    Tags = table.Tags,
+                    Type = table.Type,
+                    UpdatedAt = table.UpdatedAt,
+                    CreatedAto = order?.CreatedAt,
+                    SumQuantity = totalQuantity,
+                    CustomerName = customer?.FullName,
+                    Total = total,
+                });
+            }
+
+            return Ok(data);
         }
 
         [HttpPost]
@@ -51,7 +102,14 @@ namespace Cafeza_BE.Controllers
                 ParentId = dto.ParentId,
             };
         }
+        public class ExtenTable : TableDTO
+        {
+            public int SumQuantity { get; set; }
+            public string CustomerName { get; set; }
+            public DateTime? CreatedAto { get; set; }
+            public decimal Total { get; set; }
 
+        }
 
     }
 }

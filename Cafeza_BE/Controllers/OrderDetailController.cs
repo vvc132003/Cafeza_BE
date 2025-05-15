@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Model;
 using MongoDB.Driver;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 
 namespace Cafeza_BE.Controllers
 {
@@ -97,6 +100,195 @@ namespace Cafeza_BE.Controllers
 
         }
 
+        public class UpdateQuantityOrderDetailRequest
+        {
+            public int Quantity { get; set; }
+            public string Note { get; set; }
+            public ExtenOrderDetail? ExtenOrderDetail { get; set; }
+        }
+
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateQuantityOrderDetail([FromBody] UpdateQuantityOrderDetailRequest request)
+        //{
+        //    if (request == null)
+        //    {
+        //        return null;
+        //    }
+
+
+        //    var orderdetail = await _orderDetail.Find(o => o.OrderId == request.ExtenOrderDetail.OrderId && o.DrinkId == request.ExtenOrderDetail.DrinkId).FirstOrDefaultAsync();
+        //    var drink = await _drink.Find(dr => dr.Id == orderdetail.DrinkId).FirstOrDefaultAsync();
+
+        //    if (request.Quantity > request.ExtenOrderDetail?.Quantity)
+        //    {
+        //        orderdetail.Quantity += request.Quantity;
+        //        orderdetail.Note = request.Note;
+        //        orderdetail.Total = orderdetail.UnitPrice * orderdetail.Quantity;
+        //        await _orderDetail.ReplaceOneAsync(x => x.Id == orderdetail.Id, orderdetail);
+        //        drink.Quantity -= request.Quantity;
+        //        await _drink.ReplaceOneAsync(x => x.Id == drink.Id, drink);
+        //        var result = ToExtenOrderDetail(orderdetail, drink);
+        //        await _hubContext.Clients.Group(orderdetail.OrderId).SendAsync("LoadOrderId", result);
+        //    }
+        //    else
+        //    {
+        //        orderdetail.Quantity -= request.Quantity;
+        //        orderdetail.Note = request.Note;
+        //        orderdetail.Total = orderdetail.UnitPrice * orderdetail.Quantity;
+        //        await _orderDetail.ReplaceOneAsync(x => x.Id == orderdetail.Id, orderdetail);
+        //        drink.Quantity -= request.Quantity;
+        //        await _drink.ReplaceOneAsync(x => x.Id == drink.Id, drink);
+        //        var result = ToExtenOrderDetail(orderdetail, drink);
+        //        await _hubContext.Clients.Group(orderdetail.OrderId).SendAsync("LoadOrderId", result);
+        //    }
+
+        //    return Ok();
+        //}
+        [HttpPut]
+        public async Task<IActionResult> UpdateQuantityOrderDetail([FromBody] UpdateQuantityOrderDetailRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request is null.");
+            }
+
+            var orderdetail = await _orderDetail
+                .Find(o => o.OrderId == request.ExtenOrderDetail.OrderId && o.DrinkId == request.ExtenOrderDetail.DrinkId)
+                .FirstOrDefaultAsync();
+
+            var drink = await _drink
+                .Find(dr => dr.Id == orderdetail.DrinkId)
+                .FirstOrDefaultAsync();
+
+            if (orderdetail == null || drink == null)
+            {
+                return NotFound("Order detail or drink not found.");
+            }
+
+            int oldQuantity = orderdetail.Quantity;
+            int newQuantity = request.Quantity;
+            int delta = newQuantity - oldQuantity;
+
+            orderdetail.Quantity = newQuantity;
+            orderdetail.Note = request.Note;
+            orderdetail.Total = orderdetail.UnitPrice * newQuantity;
+
+            await _orderDetail.ReplaceOneAsync(x => x.Id == orderdetail.Id, orderdetail);
+
+            drink.Quantity -= delta;
+            await _drink.ReplaceOneAsync(x => x.Id == drink.Id, drink);
+
+            var result = ToExtenOrderDetail(orderdetail, drink);
+            await _hubContext.Clients.Group(orderdetail.OrderId).SendAsync("LoadOrderId", result);
+
+            return Ok();
+        }
+
+        [HttpGet("exportInvoice/{orderId}")]
+        public async Task<IActionResult> ExportInvoice(string orderId)
+        {
+            QuestPDF.Settings.License = LicenseType.Community;
+
+            var order = await _order.Find(o => o.Id == orderId).FirstOrDefaultAsync();
+            if (order == null)
+                return NotFound();
+
+            var orderDetails = await _orderDetail.Find(d => d.OrderId == orderId).ToListAsync();
+
+            var drinkIds = orderDetails.Select(x => x.DrinkId).Distinct().ToList();
+            var drinks = await _drink.Find(d => drinkIds.Contains(d.Id)).ToListAsync();
+
+            var document = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Margin(30);
+                    page.Size(PageSizes.A5);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(x => x.FontSize(12));
+
+                    page.Header().Element(e =>
+                    {
+                        e.PaddingBottom(10).Text("HÓA ĐƠN: " + order.Code)
+                         .FontSize(16).Bold().AlignCenter();
+                    });
+
+
+                    page.Content().Column(col =>
+                    {
+                        col.Item().PaddingBottom(10).Text($"Ngày tạo: {DateTime.Now:dd/MM/yyyy HH:mm}");
+                        //col.Item().Element(e =>
+                        //{
+                        //    e.PaddingVertical(5).LineHorizontal(1);
+                        //});
+                        col.Item().PaddingBottom(10).LineHorizontal(1);
+
+
+                        col.Item().Background(Colors.Grey.Lighten3).PaddingVertical(5).PaddingHorizontal(10)
+                        .Row(row =>
+                        {
+                            row.RelativeColumn().Text("Tên đồ uống").Bold().FontSize(10);
+                            row.ConstantColumn(60).AlignCenter().Text("Giá bán").Bold().FontSize(10);
+                            row.ConstantColumn(60).AlignCenter().Text("SL").Bold().FontSize(10);
+                            row.ConstantColumn(80).AlignRight().Text("Thành tiền").Bold().FontSize(10);
+                        });
+
+
+                        foreach (var item in orderDetails)
+                        {
+                            var drink = drinks.FirstOrDefault(d => d.Id == item.DrinkId);
+                            if (drink == null) continue;
+
+                            col.Item().PaddingVertical(5).PaddingHorizontal(10)
+                                .Row(row =>
+                                {
+                                    row.RelativeColumn().Text(drink.Name).FontSize(10);
+                                    row.ConstantColumn(60).AlignCenter().Text($"{drink.Price:N0} VNĐ").FontSize(10);
+                                    row.ConstantColumn(60).AlignCenter().Text($"{item.Quantity}").FontSize(10);
+                                    row.ConstantColumn(80).AlignRight().Text($"{item.UnitPrice * item.Quantity:N0} VNĐ").FontSize(10);
+                                });
+                        }
+
+                        //col.Item().Element(e =>
+                        //{
+                        //    e.PaddingTop(5).LineHorizontal(1);
+                        //});
+                        col.Item().PaddingTop(10).LineHorizontal(1);
+
+                        var totalAmount = order.TotalAmount;
+                        if (totalAmount == 0)
+                        {
+                            totalAmount = orderDetails.Sum(item => item.UnitPrice * item.Quantity);
+                        }
+                        col.Item()
+                        .PaddingTop(10) 
+                        .AlignRight()
+                        .Text($"Tổng cộng: {totalAmount:N0} VNĐ")
+                        .Bold()
+                        .FontSize(14);
+
+                    });
+
+                    page.Footer().AlignCenter().Text("Cảm ơn quý khách!").Italic();
+                });
+            });
+
+            var pdfBytes = document.GeneratePdf();
+
+            // Tạo đường dẫn lưu file
+            string directoryPath = @"D:\Invoices";
+            Directory.CreateDirectory(directoryPath); // tạo thư mục nếu chưa có
+
+            string filePath = Path.Combine(directoryPath, $"hoadon_{order.Code}.pdf");
+
+            // Ghi file ra đĩa D
+            await System.IO.File.WriteAllBytesAsync(filePath, pdfBytes);
+
+            // Trả kết quả thành công (nếu không cần trả file về frontend)
+            return Ok(new { message = "Hóa đơn đã được lưu tại " + filePath });
+        }
+
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
@@ -171,7 +363,7 @@ namespace Cafeza_BE.Controllers
             public string? DrinkName { get; set; }
             public int? Quantity { get; set; }
             public decimal? UnitPrice { get; set; }
-            public decimal? Total;
+            public decimal? Total { get; set; }
             public string? Note { get; set; }
         }
     }
