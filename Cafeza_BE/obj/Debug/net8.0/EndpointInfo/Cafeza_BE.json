@@ -387,7 +387,7 @@
         }
       }
     },
-    "/api/Order": {
+    "/api/Order/createOrder": {
       "post": {
         "tags": [
           "Order"
@@ -433,6 +433,37 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Order/changeTable": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeTableRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeTableRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeTableRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -743,6 +774,20 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChangeTableRequest": {
+        "type": "object",
+        "properties": {
+          "fromTableId": {
+            "type": "string",
+            "nullable": true
+          },
+          "toTableId": {
+            "type": "string",
             "nullable": true
           }
         },

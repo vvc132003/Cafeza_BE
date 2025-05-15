@@ -81,7 +81,7 @@ namespace Cafeza_BE.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("createOrder")]
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request)
         {
             // add customer
@@ -172,6 +172,35 @@ namespace Cafeza_BE.Controllers
                 IsDeleted = dto.IsDeleted ?? false,
                 Note = dto.Note ?? null
             };
+        }
+
+        public class ChangeTableRequest
+        {
+            public string FromTableId { get; set; }
+            public string ToTableId { get; set; }
+        }
+
+        [HttpPost("changeTable")]
+        public async Task<IActionResult> ChangeTable([FromBody] ChangeTableRequest data)
+        {
+            // cập nhật table cũ
+            var tablefrom = await _table.Find(t => t.Id == data.FromTableId).FirstOrDefaultAsync();
+            tablefrom.Status = "empty";
+            await _table.ReplaceOneAsync(d => d.Id == tablefrom.Id, tablefrom);
+
+            // cập nhật table mới
+            var tableto = await _table.Find(t => t.Id == data.ToTableId).FirstOrDefaultAsync();
+            tableto.Status = "occupied";
+            await _table.ReplaceOneAsync(d => d.Id == tableto.Id, tableto);
+
+            // cập nhật order
+            var order = await _order.Find(o => o.TableId == data.FromTableId).FirstOrDefaultAsync();
+            order.TableId = data.ToTableId;
+            await _order.ReplaceOneAsync(o => o.Id == order.Id, order);
+
+            //await _hubContext.Clients.All.SendAsync("loadTable", tablefrom);
+            await _hubContext.Clients.All.SendAsync("loadTable", tableto);
+            return Ok();
         }
 
     }

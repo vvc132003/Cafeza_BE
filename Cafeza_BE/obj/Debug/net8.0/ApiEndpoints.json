@@ -215,8 +215,24 @@
   },
   {
     "ContainingType": "Cafeza_BE.Controllers.OrderController",
+    "Method": "ChangeTable",
+    "RelativePath": "api/Order/changeTable",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "Cafeza_BE.Controllers.OrderController\u002BChangeTableRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.OrderController",
     "Method": "CreateOrder",
-    "RelativePath": "api/Order",
+    "RelativePath": "api/Order/createOrder",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
