@@ -21,7 +21,8 @@ namespace Cafeza_BE.DB
         public IMongoCollection<Employee> Employees => _database.GetCollection<Employee>("Employees");
         public IMongoCollection<Order> Orders => _database.GetCollection<Order>("Orders");
         public IMongoCollection<OrderDetail> OrderDetails => _database.GetCollection<OrderDetail>("OrderDetails");
-
+        public IMongoCollection<OrderCancellation> OrderCancellations => _database.GetCollection<OrderCancellation>("OrderCancellations");
+        public IMongoCollection<TableTransfer> TableTransfers => _database.GetCollection<TableTransfer>("TableTransfers");
 
     }
 }

@@ -17,6 +17,9 @@ namespace Cafeza_BE.Controllers
         private readonly IMongoCollection<Order> _order;
         private readonly IMongoCollection<OrderDetail> _orderdetail;
         private readonly IMongoCollection<Drink> _drink;
+        private readonly IMongoCollection<OrderCancellation> _orderCancellation;
+        private readonly IMongoCollection<TableTransfer> _tableTransfer;
+
 
         private readonly IMongoCollection<Customer> _customer;
         private readonly IMongoCollection<Employee> _employee;
@@ -31,6 +34,8 @@ namespace Cafeza_BE.Controllers
             _employee = context.Employees;
             _orderdetail = context.OrderDetails;
             _drink = context.Drinks;
+            _orderCancellation = context.OrderCancellations;
+            _tableTransfer = context.TableTransfers;
         }
 
 
@@ -103,17 +108,24 @@ namespace Cafeza_BE.Controllers
             return Ok(entityOrder);
         }
 
-        [HttpGet("updateCancelOrder/{orderId}")]
-        public async Task<IActionResult> UpdateCancelOrder(string orderId)
+        public class UpdateCancelOrderRequest 
         {
-            var order = await _order.Find(o => o.Id == orderId).FirstOrDefaultAsync();
+            //public string? OrderId { get; set; }
+            public OrderCancellationDTO? OrderCancellationDTO { get; set; }
+        }
+
+        //[HttpGet("updateCancelOrder/{orderId}")]
+        [HttpPost("updateCancelOrder")]
+        public async Task<IActionResult> UpdateCancelOrder([FromBody] OrderCancellationDTO orderCancellationDTO)
+        {
+            var order = await _order.Find(o => o.Id == orderCancellationDTO.OrderId).FirstOrDefaultAsync();
             order.Status = "Đã huỷ";
             await _order.ReplaceOneAsync(d => d.Id == order.Id, order);
             var table = _table.Find(d => d.Id == order.TableId).FirstOrDefault();
             table.Status = "empty";
             await _table.ReplaceOneAsync(d => d.Id == table.Id, table);
 
-            var orderdetails = await _orderdetail.Find(or => or.OrderId == orderId).ToListAsync();
+            var orderdetails = await _orderdetail.Find(or => or.OrderId == orderCancellationDTO.OrderId).ToListAsync();
             if(orderdetails != null)
             {
                 var drinkIds = orderdetails.Select(od => od.DrinkId).Distinct().ToList();
@@ -131,9 +143,25 @@ namespace Cafeza_BE.Controllers
                 }
             }
 
+            var orderCancellation = ToEntityOrderCancellation(orderCancellationDTO);
+            await _orderCancellation.InsertOneAsync(orderCancellation);
+
             await _hubContext.Clients.All.SendAsync("loadTable", table);
             return Ok(order);
         }
+
+        private OrderCancellation ToEntityOrderCancellation(OrderCancellationDTO dto)
+        {
+            if (dto == null) return null;
+            return new OrderCancellation
+            {
+                OrderId = dto.OrderId,
+                Reason = dto.Reason,
+                CancelTime = dto.CancelTime,
+                EmployeeId = dto.EmployeeId
+            };
+        }
+
 
         private Order ToEntityOrder(OrderDTO dto)
         {
@@ -178,29 +206,68 @@ namespace Cafeza_BE.Controllers
         {
             public string FromTableId { get; set; }
             public string ToTableId { get; set; }
+            public string EmployeeId { get; set; }
         }
 
         [HttpPost("changeTable")]
         public async Task<IActionResult> ChangeTable([FromBody] ChangeTableRequest data)
         {
             // cập nhật table cũ
-            var tablefrom = await _table.Find(t => t.Id == data.FromTableId).FirstOrDefaultAsync();
-            tablefrom.Status = "empty";
-            await _table.ReplaceOneAsync(d => d.Id == tablefrom.Id, tablefrom);
+            //var tablefrom = await _table.Find(t => t.Id == data.FromTableId).FirstOrDefaultAsync();
+            //tablefrom.Status = "empty";
+            //await _table.ReplaceOneAsync(d => d.Id == tablefrom.Id, tablefrom);
+            await _table.UpdateOneAsync(
+                                        t => t.Id == data.FromTableId,
+                                        Builders<Table>.Update.Set(t => t.Status, "empty")
+                                    );
+
 
             // cập nhật table mới
             var tableto = await _table.Find(t => t.Id == data.ToTableId).FirstOrDefaultAsync();
-            tableto.Status = "occupied";
-            await _table.ReplaceOneAsync(d => d.Id == tableto.Id, tableto);
+            //tableto.Status = "occupied";
+            //await _table.ReplaceOneAsync(d => d.Id == tableto.Id, tableto);
+            await _table.UpdateOneAsync(
+                                        t => t.Id == data.ToTableId,
+                                        Builders<Table>.Update.Set(t => t.Status, "occupied")
+                                    );
 
             // cập nhật order
             var order = await _order.Find(o => o.TableId == data.FromTableId).FirstOrDefaultAsync();
-            order.TableId = data.ToTableId;
-            await _order.ReplaceOneAsync(o => o.Id == order.Id, order);
+            //order.TableId = data.ToTableId;
+            //await _order.ReplaceOneAsync(o => o.Id == order.Id, order);
+            await _order.UpdateOneAsync(
+                                        o => o.Id == order.Id,
+                                        Builders<Order>.Update.Set(o => o.TableId, data.ToTableId)
+                                    );
+
+            // lưu thông tin chuyển bàn
+
+            var tableTransferdto = new TableTransferDTO();
+            if(data.ToTableId != null)
+            {
+                tableTransferdto.OrderId = order.Id;
+                tableTransferdto.FromTableId = data.FromTableId;
+                tableTransferdto.ToTableId = data.ToTableId;
+                tableTransferdto.EmployeeId = data.EmployeeId;
+                var tableTransfer = toEntityTableTransfer(tableTransferdto);
+                await _tableTransfer.InsertOneAsync(tableTransfer);
+            }
 
             //await _hubContext.Clients.All.SendAsync("loadTable", tablefrom);
             await _hubContext.Clients.All.SendAsync("loadTable", tableto);
             return Ok();
+        }
+        private TableTransfer toEntityTableTransfer(TableTransferDTO dto)
+        {
+            return new TableTransfer
+            {
+                OrderId = dto.OrderId,
+                FromTableId = dto.FromTableId,
+                ToTableId = dto.ToTableId,
+                TransferTime = dto.TransferTime,
+                EmployeeId = dto.EmployeeId,
+                Note = dto.Note
+            };
         }
 
     }

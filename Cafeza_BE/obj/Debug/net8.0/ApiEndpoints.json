@@ -264,14 +264,14 @@
   {
     "ContainingType": "Cafeza_BE.Controllers.OrderController",
     "Method": "UpdateCancelOrder",
-    "RelativePath": "api/Order/updateCancelOrder/{orderId}",
-    "HttpMethod": "GET",
+    "RelativePath": "api/Order/updateCancelOrder",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "orderId",
-        "Type": "System.String",
+        "Name": "orderCancellationDTO",
+        "Type": "Model.OrderCancellationDTO",
         "IsRequired": true
       }
     ],

@@ -418,21 +418,30 @@
         }
       }
     },
-    "/api/Order/updateCancelOrder/{orderId}": {
-      "get": {
+    "/api/Order/updateCancelOrder": {
+      "post": {
         "tags": [
           "Order"
         ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderCancellationDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderCancellationDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderCancellationDTO"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -787,6 +796,10 @@
             "nullable": true
           },
           "toTableId": {
+            "type": "string",
+            "nullable": true
+          },
+          "employeeId": {
             "type": "string",
             "nullable": true
           }
@@ -1237,6 +1250,33 @@
             "nullable": true
           },
           "note": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderCancellationDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "orderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "cancelTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "employeeId": {
             "type": "string",
             "nullable": true
           }
