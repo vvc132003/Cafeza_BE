@@ -176,7 +176,10 @@ namespace Cafeza_BE.Controllers
                 TotalAmount = dto.TotalAmount,
                 PaymentMethod = dto.PaymentMethod,
                 Status = "Chờ thanh toán",
-                Note = dto.Note
+                Note = dto.Note,
+                AmountPaid = dto.AmountPaid,
+                ChangeAmount = dto.ChangeAmount,
+                PaidAt = null
             };
         }
 
@@ -269,6 +272,46 @@ namespace Cafeza_BE.Controllers
                 Note = dto.Note
             };
         }
+
+        public class PayRequest
+        {
+            public decimal? TotalAmount { get; set; }
+            public decimal? AmountPaid { get; set; }      // Khách trả bao nhiêu
+            public decimal? ChangeAmount { get; set; }    // Tiền thối lại
+            public string? PaymentMethod { get; set; }
+            public string? OrderId { get; set; }
+
+        }
+
+        [HttpPost("pay")]
+        public async Task<IActionResult> PayOrder([FromBody] PayRequest data)
+        {
+            var order = await _order.Find(o => o.Id == data.OrderId).FirstOrDefaultAsync();
+            if (order == null)
+                return NotFound("Order not found");
+
+            var update = Builders<Order>.Update
+                .Set(o => o.TotalAmount, data.TotalAmount)
+                .Set(o => o.AmountPaid, data.AmountPaid)
+                .Set(o => o.ChangeAmount, data.ChangeAmount)
+                .Set(o => o.PaymentMethod, data.PaymentMethod)
+                .Set(o => o.Status, "Đã thanh toán")
+                .Set(o => o.PaidAt, DateTime.Now);
+
+            await _order.UpdateOneAsync(o => o.Id == data.OrderId, update);
+
+            await _table.UpdateOneAsync(
+                                       t => t.Id == order.TableId,
+                                       Builders<Table>.Update.Set(t => t.Status, "empty")
+                                   );
+            var table = await _table.Find(t => t.Id == order.TableId).FirstOrDefaultAsync();
+
+            await _hubContext.Clients.All.SendAsync("loadTable", table);
+
+
+            return Ok();
+        }
+
 
     }
 }

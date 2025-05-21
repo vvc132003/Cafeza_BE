@@ -247,6 +247,22 @@
   },
   {
     "ContainingType": "Cafeza_BE.Controllers.OrderController",
+    "Method": "PayOrder",
+    "RelativePath": "api/Order/pay",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "Cafeza_BE.Controllers.OrderController\u002BPayRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.OrderController",
     "Method": "GetOrdersByTableId",
     "RelativePath": "api/Order/table/{tableId}",
     "HttpMethod": "GET",
