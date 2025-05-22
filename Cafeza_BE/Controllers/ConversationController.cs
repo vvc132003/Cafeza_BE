@@ -1,6 +1,7 @@
 ﻿using Cafeza_BE.DB;
 using Cafeza_BE.Hub;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Model;
@@ -208,7 +209,8 @@ namespace Cafeza_BE.Controllers
                 var formattedMessages = messages.Select(m => new
                 {
                     text = m.Content,
-                    fromSelf = m.SenderMemberId == userId
+                    //fromSelf = m.SenderMemberId == userId
+                    senderMemberId = m.SenderMemberId
                 }).ToList();
 
                 var lastMessage = messages.LastOrDefault()?.Content ?? "";
@@ -219,12 +221,57 @@ namespace Cafeza_BE.Controllers
                      name = user?.FullName ?? "Không rõ",
                      avatar = "https://i.pravatar.cc/150?img=1",
                      lastMessage,
-                     messages = formattedMessages
+                     messages = formattedMessages,
+                     //senderMemberId = userId,
                  });
             }
 
             return Ok(results);
         }
 
+        public class ChatRes {
+            public string ConversationId { get; set; }
+            public string Content { get; set; }
+            public string SenderMemberId { get; set; }
+
+        }
+
+
+
+        [HttpPost("createChat")]
+        public async Task<IActionResult> createChat([FromBody] ChatRes request)
+        {
+            var responseToSend = new
+            {
+                request.ConversationId,
+                request.Content,
+                request.SenderMemberId,
+                LastMessage = request.Content,
+            };
+            var messDTO = new MessageDTO();
+            messDTO.SenderMemberId = request.SenderMemberId;
+            messDTO.Content = request.Content;
+            messDTO.ConversationId = request.ConversationId;
+            messDTO.MessageType = "text";
+            var newMess = ToEntityMessage(messDTO);
+            await _message.InsertOneAsync(newMess);
+
+            await _hubContext.Clients.Group(responseToSend.ConversationId).SendAsync("LoadConversationId", responseToSend);
+
+            return Ok();
+        }
+
+        private Message ToEntityMessage(MessageDTO dto)
+        {
+            return new Message
+            {
+               ConversationId = dto.ConversationId,
+               Content = dto.Content,
+               SenderMemberId = dto.SenderMemberId,
+               MessageType = dto.MessageType,
+               CreatedAt = dto.CreatedAt ?? DateTime.Now
+            };
+        }
     }
+
 }

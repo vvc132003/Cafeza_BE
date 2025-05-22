@@ -59,6 +59,22 @@
   },
   {
     "ContainingType": "Cafeza_BE.Controllers.ConversationController",
+    "Method": "createChat",
+    "RelativePath": "api/Conversation/createChat",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Cafeza_BE.Controllers.ConversationController\u002BChatRes",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.ConversationController",
     "Method": "CreateConverstation",
     "RelativePath": "api/Conversation/createConverstation",
     "HttpMethod": "POST",

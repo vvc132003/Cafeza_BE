@@ -21,4 +21,15 @@ namespace Model
         public DateTime? DeletedAt { get; set; }
 
     }
+    public class MessageDTO
+    {
+        public string? Id { get; set; }
+        public string? ConversationId { get; set; }
+        public string? SenderMemberId { get; set; }
+        public string? MessageType { get; set; }
+        public string? Content { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
+
+    }
 }

@@ -11,10 +11,10 @@ namespace Cafeza_BE.Hub
         //    await Clients.All.SendAsync("ReceiveMessage", user, message);
         //}
 
-        public async Task LoadOrderId(string orderId, OrderDetailDTO orderDetailDTO)
-        {
-            await Clients.Group(orderId).SendAsync("ReceiveorderDetailDTO", orderDetailDTO);
-        }
+        //public async Task LoadOrderId(string orderId, OrderDetailDTO orderDetailDTO)
+        //{
+        //    await Clients.Group(orderId).SendAsync("ReceiveorderDetailDTO", orderDetailDTO);
+        //}
 
         public async Task JoinOrderDetailOrderId(string orderId)
         {
@@ -24,6 +24,13 @@ namespace Cafeza_BE.Hub
         public async Task LeaveGroup(string orderId)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, orderId);
+        }
+
+        //// chat
+        ///
+        public async Task JoinGropsChat(string conversationId)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, conversationId);
         }
     }
 }
