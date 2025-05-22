@@ -21,8 +21,10 @@ namespace Cafeza_BE.Controllers
         private readonly IMongoCollection<TableTransfer> _tableTransfer;
 
 
-        private readonly IMongoCollection<Customer> _customer;
-        private readonly IMongoCollection<Employee> _employee;
+        private readonly IMongoCollection<CustomerDetails> _customer;
+        private readonly IMongoCollection<EmployeeDetails> _employee;
+        private readonly IMongoCollection<User> _user;
+
         private readonly IHubContext<SignalRHub> _hubContext;
 
         public OrderController(MongoDbContext context, IHubContext<SignalRHub> hubContext)
@@ -30,8 +32,9 @@ namespace Cafeza_BE.Controllers
             _table = context.Tables;
             _hubContext = hubContext;
             _order = context.Orders;
-            _customer = context.Customers;
-            _employee = context.Employees;
+            _customer = context.CustomerDetails;
+            _employee = context.EmployeeDetails;
+            _user = context.Users;
             _orderdetail = context.OrderDetails;
             _drink = context.Drinks;
             _orderCancellation = context.OrderCancellations;
@@ -51,8 +54,8 @@ namespace Cafeza_BE.Controllers
                 return NotFound("Không tìm thấy đơn hàng cho bàn này.");
             }
             var table = await _table.Find(d => d.Id == order.TableId).FirstOrDefaultAsync();
-            var customer = await _customer.Find(x => x.Id == order.CustomerId).FirstOrDefaultAsync();
-            var employee = await _employee.Find(x => x.Id == order.EmployeeId).FirstOrDefaultAsync();
+            var customer = await _user.Find(x => x.Id == order.CustomerId).FirstOrDefaultAsync();
+            var employee = await _user.Find(x => x.Id == order.EmployeeId).FirstOrDefaultAsync();
             data.Add(new ExtenOrder
             {
                 OrderId = order.Id,
@@ -82,7 +85,9 @@ namespace Cafeza_BE.Controllers
         public class CreateOrderRequest
         {
             public OrderDTO? OrderDto { get; set; }
-            public CustomerDTO? CustomerDto { get; set; }
+            public CustomerDetailsDTO? CustomerDetailsDTO { get; set; }
+            public UserDTO? UserDTO { get; set; }
+
         }
 
 
@@ -90,11 +95,18 @@ namespace Cafeza_BE.Controllers
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request)
         {
             // add customer
-            if(request.CustomerDto != null)
+            if (request.UserDTO != null)
             {
-                var entityCustomer = ToEntityCustomer(request.CustomerDto);
+                var newUser = ToEntityUser(request.UserDTO);
+                _user.InsertOne(newUser);
+
+                request.CustomerDetailsDTO.UserId = newUser.Id;
+
+
+                var entityCustomer = ToEntityCustomer(request.CustomerDetailsDTO);
                 await _customer.InsertOneAsync(entityCustomer);
-                request.OrderDto.CustomerId = entityCustomer.Id;
+
+                request.OrderDto.CustomerId = newUser.Id;
             }
             // add order 
             var entityOrder = ToEntityOrder(request.OrderDto);
@@ -108,6 +120,22 @@ namespace Cafeza_BE.Controllers
             return Ok(entityOrder);
         }
 
+        private User ToEntityUser(UserDTO dto)
+        {
+            return new User
+            {
+                FullName = dto.FullName,
+                PhoneNumber = dto.PhoneNumber,
+                Email = dto.Email,
+                Password = dto.Password,
+                DateOfBirth = dto.DateOfBirth,
+                Gender = dto.Gender,
+                Address = dto.Address,
+                IsDeleted = dto.IsDeleted,
+                Role = dto.Role ?? "customer",
+                CreatedAt = dto.CreatedAt ?? DateTime.Now
+            };
+        }
         public class UpdateCancelOrderRequest 
         {
             //public string? OrderId { get; set; }
@@ -183,24 +211,16 @@ namespace Cafeza_BE.Controllers
             };
         }
 
-        private Customer ToEntityCustomer(CustomerDTO dto)
+        private CustomerDetails ToEntityCustomer(CustomerDetailsDTO dto)
         {
             if (dto == null) return null;
 
-            return new Customer
+            return new CustomerDetails
             {
-                FullName = dto.FullName ?? null,
-                PhoneNumber = dto.PhoneNumber ?? null,
-                Email = dto.Email ?? null,
-                Password = dto.Password ?? null,
-                DateOfBirth = dto.DateOfBirth ?? null,
-                Gender = dto.Gender ?? null,
-                Address = dto.Address ?? null,
+                UserId = dto.UserId,
                 MembershipLevel = dto.MembershipLevel ?? "Thường",
                 RewardPoints = dto.RewardPoints ?? 0,
-                CreatedAt = dto.CreatedAt ?? DateTime.Now,
-                Role = dto.Role ?? null,
-                IsDeleted = dto.IsDeleted ?? false,
+               
                 Note = dto.Note ?? null
             };
         }

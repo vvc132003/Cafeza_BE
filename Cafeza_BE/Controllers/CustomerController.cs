@@ -14,8 +14,8 @@ namespace Cafeza_BE.Controllers
         private readonly IMongoCollection<Customer> _customer;
         public CustomerController(MongoDbContext context)
         {
-            _employee = context.Employees;
-            _customer = context.Customers;
+            //_employee = context.Employees;
+            //_customer = context.Customers;
         }
         //[HttpPost]
         //public ActionResult<Employee> Create([FromBody] EmployeeDTO newEmployeedto)

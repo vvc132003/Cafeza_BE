@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Cafeza_BE")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a1879b567b3993441f7d3a7202fabf2abc148a17")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d2614ef39b64e3979512299b29dff27b35aeef22")]
 [assembly: System.Reflection.AssemblyProductAttribute("Cafeza_BE")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Cafeza_BE")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

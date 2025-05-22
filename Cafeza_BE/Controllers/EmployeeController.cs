@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Data;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Cafeza_BE.DB;
@@ -14,7 +15,8 @@ namespace Cafeza_BE.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly IMongoCollection<Employee> _employee;
+        private readonly IMongoCollection<EmployeeDetails> _employeedetails;
+        private readonly IMongoCollection<User> _user;
         private readonly List<Employees> _employees;
         public class Employees
         {
@@ -24,7 +26,9 @@ namespace Cafeza_BE.Controllers
         }
         public EmployeeController(MongoDbContext context)
         {
-            _employee = context.Employees;
+            //_employee = context.Employees;
+            _employeedetails = context.EmployeeDetails;
+            _user = context.Users;
             _employees = new List<Employees>
             {
                 new Employees { Email = "admin", Password = "admin123", Roles= "Admin" },
@@ -32,35 +36,53 @@ namespace Cafeza_BE.Controllers
             };
         }
 
-        [HttpPost]
-        public ActionResult<Employee> Create([FromBody] EmployeeDTO newEmployeedto)
+        public class EmployeeRes
         {
-            var newEmployee = ToEntity(newEmployeedto);
-            _employee.InsertOne(newEmployee);
+            public EmployeeDetailsDTO EmployeeDetailsDTO { get; set; }
+            public UserDTO UserDTO { get; set; }
+        }
+
+        [HttpPost]
+        public ActionResult<Employee> Create([FromBody] EmployeeRes res)
+        {
+            var newUser = ToEntityUser(res.UserDTO);
+            _user.InsertOne(newUser);
+            res.EmployeeDetailsDTO.UserId = newUser.Id;
+            var newEmployee = ToEntityEmployee(res.EmployeeDetailsDTO);
+            _employeedetails.InsertOne(newEmployee);
             return Ok(newEmployee);
         }
 
-        private Employee ToEntity(EmployeeDTO dto)
+        private EmployeeDetails ToEntityEmployee(EmployeeDetailsDTO dto)
         {
-            return new Employee
+            return new EmployeeDetails
             {
+                UserId = dto.UserId,
                 Code = dto.Code,
-                FullName = dto.FullName,
-                Gender = dto.Gender,
-                DateOfBirth = dto.DateOfBirth,
-                PhoneNumber = dto.PhoneNumber,
-                Email = dto.Email,
-                Password = dto.Password,
                 Position = dto.Position,
                 StartDate = dto.StartDate,
                 Salary = dto.Salary,
                 Status = dto.Status,
-                Address = dto.Address,
                 Shift = dto.Shift,
                 IdentityNumber = dto.IdentityNumber,
                 AvatarUrl = dto.AvatarUrl,
                 Roles = dto.Roles ?? new List<string>(),
+            };
+        }
+
+        private User ToEntityUser(UserDTO dto)
+        {
+            return new User
+            {
+               FullName = dto.FullName,
+               PhoneNumber = dto.PhoneNumber,
+               Email = dto.Email,
+               Password = dto.Password, 
+               DateOfBirth = dto.DateOfBirth,
+               Gender = dto.Gender,
+               Address = dto.Address,
                 IsDeleted = dto.IsDeleted,
+                Role = dto.Role,
                 CreatedAt = dto.CreatedAt ?? DateTime.Now
             };
         }
@@ -85,28 +107,36 @@ namespace Cafeza_BE.Controllers
             public string Email { get; set; }
             public string Password { get; set; }
         }
-        private Employee Authenticate(string email, string password)
+        private User Authenticate(string email, string password)
         {
             //var employee = _employees.FirstOrDefault(user => user.Email == email && user.Password == password);
-            var employee = _employee.Find(user => user.Email == email && user.Password == password).FirstOrDefault();
-            return employee;
+            var user = _user.Find(user => user.Email == email && user.Password == password).FirstOrDefault();
+            return user;
         }
 
-        private string GenerateJwtToken(Employee employee)
+        private string GenerateJwtToken(User user)
         {
             var claims = new List<Claim>
     {
-        new Claim(JwtRegisteredClaimNames.Sub, employee.Email),
+        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim("id", employee.Id),
+            new Claim("id", user.Id),
             //new Claim(ClaimTypes.Role, employee.Roles)
     };
-
-            // thêm từng quyền (role) làm claim
-            foreach (var role in employee.Roles)
+            if(user.Role == "employee")
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                var employee = _employeedetails.Find(e => e.UserId == user.Id).FirstOrDefault();
+            // thêm từng quyền (role) làm claim
+                foreach (var role in employee.Roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
             }
+            else
+            {
+                claims.Add(new Claim(ClaimTypes.Role, user.Role));
+            }
+
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("[}61L3B>z?XvzH&#!jH?b_RJ=K£lh-J7TO~c+i"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

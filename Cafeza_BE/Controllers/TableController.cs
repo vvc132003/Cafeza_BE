@@ -1,6 +1,5 @@
 ﻿using Cafeza_BE.DB;
 using Cafeza_BE.Hub;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Model;
@@ -16,8 +15,10 @@ namespace Cafeza_BE.Controllers
         private readonly IMongoCollection<Order> _order;
         private readonly IMongoCollection<OrderDetail> _orderDetail;
         private readonly IMongoCollection<Drink> _drink;
-        private readonly IMongoCollection<Customer> _customer;
-        private readonly IMongoCollection<Employee> _employee;
+        private readonly IMongoCollection<CustomerDetails> _customer;
+        private readonly IMongoCollection<EmployeeDetails> _employee;
+        private readonly IMongoCollection<User> _user;
+
         private readonly IHubContext<SignalRHub> _hubContext;
 
         public TableController(MongoDbContext context, IHubContext<SignalRHub> hubContext)
@@ -25,10 +26,11 @@ namespace Cafeza_BE.Controllers
             _table = context.Tables;
             _hubContext = hubContext;
             _order = context.Orders;
-            _customer = context.Customers;
-            _employee = context.Employees;
+            _customer = context.CustomerDetails;
+            _employee = context.EmployeeDetails;
             _orderDetail = context.OrderDetails;
             _drink = context.Drinks;
+            _user = context.Users;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllTables()
@@ -48,7 +50,7 @@ namespace Cafeza_BE.Controllers
                 var total = orderDetails.Sum(od => od.Total);
 
                 var customer = order?.CustomerId != null
-                    ? await _customer.Find(c => c.Id == order.CustomerId).FirstOrDefaultAsync()
+                    ? await _user.Find(c => c.Id == order.CustomerId).FirstOrDefaultAsync()
                     : null;
 
                 data.Add(new ExtenTable

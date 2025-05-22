@@ -58,6 +58,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Cafeza_BE.Controllers.ConversationController",
+    "Method": "CreateConverstation",
+    "RelativePath": "api/Conversation/createConverstation",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Cafeza_BE.Controllers.ConversationController\u002BCreateConverstationRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.ConversationController",
+    "Method": "GetConversations",
+    "RelativePath": "api/Conversation/getConversations/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Cafeza_BE.Controllers.DrinkController",
     "Method": "GetAll",
     "RelativePath": "api/Drink",
@@ -180,8 +212,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "newEmployeedto",
-        "Type": "Model.EmployeeDTO",
+        "Name": "res",
+        "Type": "Cafeza_BE.Controllers.EmployeeController\u002BEmployeeRes",
         "IsRequired": true
       }
     ],
