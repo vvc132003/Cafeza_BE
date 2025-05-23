@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\hub\\signalrhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\hub\\signalrhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\controllers\\conversationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\controllers\\conversationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35134226-2FD5-476C-AD71-AF8CDD8C967B}|Model\\Model.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\model\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35134226-2FD5-476C-AD71-AF8CDD8C967B}|Model\\Model.csproj|solutionrelative:model\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\hub\\signalrhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\hub\\signalrhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\controllers\\orderdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -22,11 +26,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
+              "Title": "Message.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Model\\Message.cs",
+              "RelativeDocumentMoniker": "Model\\Message.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Model\\Message.cs",
+              "RelativeToolTip": "Model\\Message.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAADwvyMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T05:23:09.858Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "OrderDetailController.cs",
               "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\OrderDetailController.cs",
               "RelativeDocumentMoniker": "Cafeza_BE\\Controllers\\OrderDetailController.cs",
@@ -34,12 +51,11 @@
               "RelativeToolTip": "Cafeza_BE\\Controllers\\OrderDetailController.cs",
               "ViewState": "AgIAAFUAAAAAAAAAAAAjwGIAAABPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-22T10:19:32.485Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-22T10:19:32.485Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "SignalRHub.cs",
               "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Hub\\SignalRHub.cs",
               "RelativeDocumentMoniker": "Cafeza_BE\\Hub\\SignalRHub.cs",
@@ -47,18 +63,17 @@
               "RelativeToolTip": "Cafeza_BE\\Hub\\SignalRHub.cs",
               "ViewState": "AgIAABkAAAAAAAAAAAAqwCwAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-22T10:11:15.88Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-22T10:11:15.88Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "ConversationController.cs",
               "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\ConversationController.cs",
               "RelativeDocumentMoniker": "Cafeza_BE\\Controllers\\ConversationController.cs",
               "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\ConversationController.cs",
               "RelativeToolTip": "Cafeza_BE\\Controllers\\ConversationController.cs",
-              "ViewState": "AgIAAEQBAAAAAAAAAAAIwEwBAAAgAAAAAAAAAA==",
+              "ViewState": "AgIAAGcBAAAAAAAAAAAAAHkBAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-22T07:29:04.902Z",
               "EditorCaption": ""

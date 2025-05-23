@@ -19,6 +19,8 @@ namespace Model
         public string? Content { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public string? ParentId { get; set; }
+
 
     }
     public class MessageDTO
@@ -30,6 +32,8 @@ namespace Model
         public string? Content { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public string? ParentId { get; set; }
+
 
     }
 }

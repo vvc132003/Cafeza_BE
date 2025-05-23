@@ -1,4 +1,5 @@
-﻿using Cafeza_BE.DB;
+﻿using System.Text.RegularExpressions;
+using Cafeza_BE.DB;
 using Cafeza_BE.Hub;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -216,6 +217,7 @@ namespace Cafeza_BE.Controllers
                     name = user?.FullName ?? "Không rõ",
                     avatar = "https://i.pravatar.cc/150?img=1",
                     lastMessage,
+                    messageType = messages.LastOrDefault()?.MessageType,
                 });
             }
 
@@ -247,11 +249,50 @@ namespace Cafeza_BE.Controllers
                 var formattedMessages = messages.Select(m => new
                 {
                     text = m.Content,
-                    senderMemberId = m.SenderMemberId
+                    senderMemberId = m.SenderMemberId,
+                    messageType = m.MessageType,
+                    parentId = m.ParentId,
+                    id = m.Id,
                 }).ToList();
 
+            //var parentIds = messages
+            //        .Where(m => !string.IsNullOrEmpty(m.ParentId))
+            //        .Select(m => m.ParentId)
+            //        .Distinct()
+            //        .ToList();
 
-                 results.Add(new
+            //// Tạo dictionary: key là Id, value là Message
+            //var parentMessages = messages.ToDictionary(m => m.Id);
+
+            //// Trong select:
+            //var formattedMessages = messages.Select(m =>
+            //{
+            //    Message parentMsg = null;
+
+            //    if (!string.IsNullOrEmpty(m.ParentId))
+            //    {
+            //        parentMessages.TryGetValue(m.ParentId, out parentMsg);
+            //    }
+
+            //    return new
+            //    {
+            //        id = m.Id,
+            //        text = m.Content,
+            //        senderMemberId = m.SenderMemberId,
+            //        messageType = m.MessageType,
+            //        parentId = m.ParentId,
+            //        parentMessage = parentMsg == null ? null : new
+            //        {
+            //            id = parentMsg.Id,
+            //            text = parentMsg.Content,
+            //            messageType = parentMsg.MessageType,
+            //            senderMemberId = parentMsg.SenderMemberId
+            //        }
+            //    };
+            //}).ToList();
+
+
+            results.Add(new
                  {
                      conversationId = conversation.Id,
                      name = user?.FullName ?? "Không rõ",
@@ -276,20 +317,30 @@ namespace Cafeza_BE.Controllers
         [HttpPost("createChat")]
         public async Task<IActionResult> createChat([FromBody] ChatRes request)
         {
+            string messageType = GetMessageType(request.Content);
+
+            var messDTO = new MessageDTO
+            {
+                SenderMemberId = request.SenderMemberId,
+                Content = request.Content,
+                ConversationId = request.ConversationId,
+                MessageType = messageType,
+                ParentId  = null
+            };
+
+            var newMess = ToEntityMessage(messDTO);
+            await _message.InsertOneAsync(newMess);
+
             var responseToSend = new
             {
                 request.ConversationId,
                 request.Content,
                 request.SenderMemberId,
                 LastMessage = request.Content,
+                MessageType = messageType,
+                Id = newMess.Id,
+                ParentId = newMess.ParentId ?? null,
             };
-            var messDTO = new MessageDTO();
-            messDTO.SenderMemberId = request.SenderMemberId;
-            messDTO.Content = request.Content;
-            messDTO.ConversationId = request.ConversationId;
-            messDTO.MessageType = "text";
-            var newMess = ToEntityMessage(messDTO);
-            await _message.InsertOneAsync(newMess);
 
             await _conversation.UpdateOneAsync(
                               co => co.Id == request.ConversationId,
@@ -307,10 +358,47 @@ namespace Cafeza_BE.Controllers
                 await _hubContext.Clients.Group(member.MemberId).SendAsync("LoadConversation", responseToSend);
             }
 
-
-
             return Ok();
         }
+
+        private string GetMessageType(string content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+                return "text";
+
+            // ✅ Nếu là video base64
+            if (content.StartsWith("data:video/", StringComparison.OrdinalIgnoreCase))
+                return "video";
+
+            // ✅ Nếu là ảnh base64
+            if (content.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
+                return "image";
+
+            // ✅ Nếu là URL hợp lệ
+            if (Uri.IsWellFormedUriString(content, UriKind.Absolute))
+            {
+                string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
+                string[] videoExtensions = { ".mp4", ".webm", ".ogg", ".mov", ".avi", ".mkv" };
+                string lowerContent = content.ToLower();
+
+                if (imageExtensions.Any(ext => lowerContent.EndsWith(ext)))
+                    return "image";
+
+                if (videoExtensions.Any(ext => lowerContent.EndsWith(ext)))
+                    return "video";
+
+                // ✅ Nếu là YouTube URL
+                if (lowerContent.Contains("youtube.com/watch") || lowerContent.Contains("youtu.be/"))
+                    return "video";
+
+                return "link";
+            }
+
+            return "text";
+        }
+
+
+
 
         private Message ToEntityMessage(MessageDTO dto)
         {
@@ -320,7 +408,8 @@ namespace Cafeza_BE.Controllers
                Content = dto.Content,
                SenderMemberId = dto.SenderMemberId,
                MessageType = dto.MessageType,
-               CreatedAt = dto.CreatedAt ?? DateTime.Now
+               CreatedAt = dto.CreatedAt ?? DateTime.Now,
+               ParentId = dto.ParentId,
             };
         }
         public class TypingRequest
@@ -341,6 +430,59 @@ namespace Cafeza_BE.Controllers
             {
                 await _hubContext.Clients.Group(member.MemberId).SendAsync("ReceiveTypingStatus", request);
             }
+            return Ok();
+        }
+        public class ReplyMessageRes
+        {
+            public string ConversationId { get; set; }
+            public string Content { get; set; }
+            public string SenderMemberId { get; set; }
+            public string ParentId { get; set; }
+
+        }
+
+        [HttpPost("replyMessage")]
+        public async Task<IActionResult> ReplyMessage([FromBody] ReplyMessageRes request)
+        {
+            string messageType = GetMessageType(request.Content);
+
+            var responseToSend = new
+            {
+                request.ConversationId,
+                request.Content,
+                request.SenderMemberId,
+                LastMessage = request.Content,
+                MessageType = messageType
+            };
+            var messDTO = new MessageDTO
+            {
+                SenderMemberId = request.SenderMemberId,
+                Content = request.Content,
+                ConversationId = request.ConversationId,
+                MessageType = messageType,
+                ParentId = request.ParentId,
+            };
+
+            var newMess = ToEntityMessage(messDTO);
+            await _message.InsertOneAsync(newMess);
+
+            await _conversation.UpdateOneAsync(
+                              co => co.Id == request.ConversationId,
+                              Builders<Conversation>.Update.Set(co => co.UpdatedAt, DateTime.UtcNow)
+                                );
+
+
+            await _hubContext.Clients.Group(responseToSend.ConversationId).SendAsync("LoadMessage", responseToSend);
+            var members = await _conversationMembers
+                .Find(cm => cm.ConversationId == request.ConversationId)
+                .ToListAsync();
+
+            foreach (var member in members)
+            {
+                await _hubContext.Clients.Group(member.MemberId).SendAsync("LoadConversation", responseToSend);
+            }
+
+            return Ok();
             return Ok();
         }
 

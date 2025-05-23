@@ -242,6 +242,37 @@
         }
       }
     },
+    "/api/Conversation/replyMessage": {
+      "post": {
+        "tags": [
+          "Conversation"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplyMessageRes"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplyMessageRes"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplyMessageRes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Drink": {
       "get": {
         "tags": [
@@ -1556,6 +1587,28 @@
             "nullable": true
           },
           "orderId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReplyMessageRes": {
+        "type": "object",
+        "properties": {
+          "conversationId": {
+            "type": "string",
+            "nullable": true
+          },
+          "content": {
+            "type": "string",
+            "nullable": true
+          },
+          "senderMemberId": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentId": {
             "type": "string",
             "nullable": true
           }

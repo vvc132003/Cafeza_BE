@@ -143,6 +143,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Cafeza_BE.Controllers.ConversationController",
+    "Method": "ReplyMessage",
+    "RelativePath": "api/Conversation/replyMessage",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Cafeza_BE.Controllers.ConversationController\u002BReplyMessageRes",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Cafeza_BE.Controllers.DrinkController",
     "Method": "GetAll",
     "RelativePath": "api/Drink",
