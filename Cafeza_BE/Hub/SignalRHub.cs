@@ -32,5 +32,17 @@ namespace Cafeza_BE.Hub
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, conversationId);
         }
+
+        public async Task JoinGropsChatConversation(string userId)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+        }
+
+        //public async Task SendTypingStatus(string conversationId, string userId)
+        //{
+        //    await Clients.OthersInGroup(conversationId)
+        //                 .SendAsync("ReceiveTypingStatus", userId);
+        //}
+
     }
 }

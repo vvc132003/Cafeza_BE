@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.VisualBasic;
 using Model;
 using MongoDB.Driver;
 
@@ -176,7 +177,6 @@ namespace Cafeza_BE.Controllers
             return Ok(newConversation);
         }
 
-
         [HttpGet("getConversations/{userId}")]
         public async Task<IActionResult> GetConversations(string userId)
         {
@@ -206,25 +206,59 @@ namespace Cafeza_BE.Controllers
                                 .SortBy(m => m.CreatedAt)
                                 .ToListAsync();
 
+               
+
+                var lastMessage = messages.LastOrDefault()?.Content ?? "";
+
+                results.Add(new
+                {
+                    conversationId = conversation.Id,
+                    name = user?.FullName ?? "Không rõ",
+                    avatar = "https://i.pravatar.cc/150?img=1",
+                    lastMessage,
+                });
+            }
+
+            return Ok(results);
+        }
+
+        [HttpGet("getMessages/{conversationId}/{userId}")]
+        public async Task<IActionResult> GetMessages(string conversationId, string userId)
+        {
+            var results = new List<object>(); // lấy dwxl iệu chat
+
+            //var conversations = await _conversation.Find(c => c.Id == conversationId).ToListAsync();
+            var conversation = await _conversation.Find(c => c.Id == conversationId).FirstOrDefaultAsync();
+
+            //foreach (var conversation in conversations)
+            //{
+                var members = await _conversationMembers
+                              .Find(m => m.ConversationId == conversation.Id)
+                              .ToListAsync();
+                var otherMember = members.FirstOrDefault(m => m.MemberId != userId);
+
+                var user = await _user.Find(u => u.Id == otherMember.MemberId).FirstOrDefaultAsync();
+
+                var messages = await _message
+                                .Find(m => m.ConversationId == conversation.Id)
+                                .SortBy(m => m.CreatedAt)
+                                .ToListAsync();
+
                 var formattedMessages = messages.Select(m => new
                 {
                     text = m.Content,
-                    //fromSelf = m.SenderMemberId == userId
                     senderMemberId = m.SenderMemberId
                 }).ToList();
 
-                var lastMessage = messages.LastOrDefault()?.Content ?? "";
 
                  results.Add(new
                  {
                      conversationId = conversation.Id,
                      name = user?.FullName ?? "Không rõ",
                      avatar = "https://i.pravatar.cc/150?img=1",
-                     lastMessage,
                      messages = formattedMessages,
-                     //senderMemberId = userId,
                  });
-            }
+            //}
 
             return Ok(results);
         }
@@ -233,6 +267,7 @@ namespace Cafeza_BE.Controllers
             public string ConversationId { get; set; }
             public string Content { get; set; }
             public string SenderMemberId { get; set; }
+
 
         }
 
@@ -256,7 +291,23 @@ namespace Cafeza_BE.Controllers
             var newMess = ToEntityMessage(messDTO);
             await _message.InsertOneAsync(newMess);
 
-            await _hubContext.Clients.Group(responseToSend.ConversationId).SendAsync("LoadConversationId", responseToSend);
+            await _conversation.UpdateOneAsync(
+                              co => co.Id == request.ConversationId,
+                              Builders<Conversation>.Update.Set(co => co.UpdatedAt, DateTime.UtcNow)
+                                );
+                
+
+            await _hubContext.Clients.Group(responseToSend.ConversationId).SendAsync("LoadMessage", responseToSend);
+            var members = await _conversationMembers
+                .Find(cm => cm.ConversationId == request.ConversationId)
+                .ToListAsync();
+
+            foreach (var member in members)
+            {
+                await _hubContext.Clients.Group(member.MemberId).SendAsync("LoadConversation", responseToSend);
+            }
+
+
 
             return Ok();
         }
@@ -272,6 +323,27 @@ namespace Cafeza_BE.Controllers
                CreatedAt = dto.CreatedAt ?? DateTime.Now
             };
         }
+        public class TypingRequest
+        {
+            public string UserId { get; set; }
+            public string ConversationId { get; set; }
+            public bool IsTyping { get; set; }
+        }
+
+        [HttpPost("log-typing")]
+        public async Task<IActionResult> LogTyping([FromBody] TypingRequest request)
+        {
+            var members = await _conversationMembers
+                 .Find(cm => cm.ConversationId == request.ConversationId)
+                 .ToListAsync();
+
+            foreach (var member in members)
+            {
+                await _hubContext.Clients.Group(member.MemberId).SendAsync("ReceiveTypingStatus", request);
+            }
+            return Ok();
+        }
+
     }
 
 }
