@@ -1,5 +1,37 @@
 [
   {
+    "ContainingType": "Cafeza_BE.Controllers.CartController",
+    "Method": "CreateCartandDetail",
+    "RelativePath": "api/Cart",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "res",
+        "Type": "Cafeza_BE.Controllers.CartController\u002BCdetailRes",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.CartController",
+    "Method": "GetCurrentCartByUserIdAsync",
+    "RelativePath": "api/Cart/getCurrentCartByUserIdAsync/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Cafeza_BE.Controllers.CategoryController",
     "Method": "GetAllCategories",
     "RelativePath": "api/Category",

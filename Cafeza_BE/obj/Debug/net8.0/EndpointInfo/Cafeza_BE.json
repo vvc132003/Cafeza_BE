@@ -5,6 +5,59 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/Cart/getCurrentCartByUserIdAsync/{userId}": {
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Cart": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CdetailRes"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CdetailRes"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CdetailRes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Category": {
       "get": {
         "tags": [
@@ -990,6 +1043,19 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CdetailRes": {
+        "type": "object",
+        "properties": {
+          "drink": {
+            "$ref": "#/components/schemas/Drink"
+          },
+          "userId": {
+            "type": "string",
             "nullable": true
           }
         },

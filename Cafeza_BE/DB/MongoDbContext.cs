@@ -29,6 +29,9 @@ namespace Cafeza_BE.DB
         public IMongoCollection<Conversation> Conversations => _database.GetCollection<Conversation>("Conversations");
         public IMongoCollection<ConversationMembers> ConversationMembers => _database.GetCollection<ConversationMembers>("ConversationMembers");
         public IMongoCollection<Message> Messages => _database.GetCollection<Message>("Messages");
+        public IMongoCollection<Cart> Carts => _database.GetCollection<Cart>("Carts");
+        public IMongoCollection<CartDetail> CartDetails => _database.GetCollection<CartDetail>("CartDetails");
+
 
 
     }
