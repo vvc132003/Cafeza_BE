@@ -225,84 +225,102 @@ namespace Cafeza_BE.Controllers
         }
 
         [HttpGet("getMessages/{conversationId}/{userId}")]
-        public async Task<IActionResult> GetMessages(string conversationId, string userId)
+        public async Task<IActionResult> GetMessages(string conversationId, string userId, [FromQuery] int page, [FromQuery] int pageSize)
         {
-            var results = new List<object>(); // lấy dwxl iệu chat
+            var results = new List<object>();
 
-            //var conversations = await _conversation.Find(c => c.Id == conversationId).ToListAsync();
             var conversation = await _conversation.Find(c => c.Id == conversationId).FirstOrDefaultAsync();
+            if (conversation == null)
+            {
+                return NotFound("Conversation not found");
+            }
 
-            //foreach (var conversation in conversations)
-            //{
-                var members = await _conversationMembers
-                              .Find(m => m.ConversationId == conversation.Id)
-                              .ToListAsync();
-                var otherMember = members.FirstOrDefault(m => m.MemberId != userId);
+            var members = await _conversationMembers
+                          .Find(m => m.ConversationId == conversation.Id)
+                          .ToListAsync();
 
-                var user = await _user.Find(u => u.Id == otherMember.MemberId).FirstOrDefaultAsync();
+            var otherMember = members.FirstOrDefault(m => m.MemberId != userId);
 
-                var messages = await _message
-                                .Find(m => m.ConversationId == conversation.Id)
-                                .SortBy(m => m.CreatedAt)
-                                .ToListAsync();
+            var user = await _user.Find(u => u.Id == otherMember.MemberId).FirstOrDefaultAsync();
 
-                var formattedMessages = messages.Select(m => new
-                {
-                    text = m.Content,
-                    senderMemberId = m.SenderMemberId,
-                    messageType = m.MessageType,
-                    parentId = m.ParentId,
-                    id = m.Id,
-                }).ToList();
+            // Tính skip và limit để phân trang
+            int skip = (page - 1) * pageSize;
 
-            //var parentIds = messages
-            //        .Where(m => !string.IsNullOrEmpty(m.ParentId))
-            //        .Select(m => m.ParentId)
-            //        .Distinct()
-            //        .ToList();
+            var messages = await _message
+                            .Find(m => m.ConversationId == conversation.Id)
+                            .SortByDescending(m => m.CreatedAt) // Lấy tin mới nhất trước (để pagination dễ lấy page 1 là tin mới nhất)
+                            .Skip(skip)
+                            .Limit(pageSize)
+                            .ToListAsync();
 
-            //// Tạo dictionary: key là Id, value là Message
-            //var parentMessages = messages.ToDictionary(m => m.Id);
+            // Vì sort descending, nên đảo lại cho hiển thị theo thứ tự thời gian tăng dần
+            messages.Reverse();
 
-            //// Trong select:
-            //var formattedMessages = messages.Select(m =>
-            //{
-            //    Message parentMsg = null;
-
-            //    if (!string.IsNullOrEmpty(m.ParentId))
-            //    {
-            //        parentMessages.TryGetValue(m.ParentId, out parentMsg);
-            //    }
-
-            //    return new
-            //    {
-            //        id = m.Id,
-            //        text = m.Content,
-            //        senderMemberId = m.SenderMemberId,
-            //        messageType = m.MessageType,
-            //        parentId = m.ParentId,
-            //        parentMessage = parentMsg == null ? null : new
-            //        {
-            //            id = parentMsg.Id,
-            //            text = parentMsg.Content,
-            //            messageType = parentMsg.MessageType,
-            //            senderMemberId = parentMsg.SenderMemberId
-            //        }
-            //    };
-            //}).ToList();
-
+            var formattedMessages = messages.Select(m => new
+            {
+                text = m.Content,
+                senderMemberId = m.SenderMemberId,
+                messageType = m.MessageType,
+                parentId = m.ParentId,
+                id = m.Id,
+            }).ToList();
 
             results.Add(new
-                 {
-                     conversationId = conversation.Id,
-                     name = user?.FullName ?? "Không rõ",
-                     avatar = "https://i.pravatar.cc/150?img=1",
-                     messages = formattedMessages,
-                 });
-            //}
+            {
+                conversationId = conversation.Id,
+                name = user?.FullName ?? "Không rõ",
+                avatar = "https://i.pravatar.cc/150?img=1",
+                messages = formattedMessages,
+                page = page,
+                pageSize = pageSize
+            });
 
             return Ok(results);
         }
+
+
+        //[HttpGet("getMessages/{conversationId}/{userId}")]
+        //public async Task<IActionResult> GetMessages(string conversationId, string userId)
+        //{
+        //    var results = new List<object>(); // lấy dwxl iệu chat
+
+        //    //var conversations = await _conversation.Find(c => c.Id == conversationId).ToListAsync();
+        //    var conversation = await _conversation.Find(c => c.Id == conversationId).FirstOrDefaultAsync();
+
+        //    //foreach (var conversation in conversations)
+        //    //{
+        //        var members = await _conversationMembers
+        //                      .Find(m => m.ConversationId == conversation.Id)
+        //                      .ToListAsync();
+        //        var otherMember = members.FirstOrDefault(m => m.MemberId != userId);
+
+        //        var user = await _user.Find(u => u.Id == otherMember.MemberId).FirstOrDefaultAsync();
+
+        //        var messages = await _message
+        //                        .Find(m => m.ConversationId == conversation.Id)
+        //                        .SortBy(m => m.CreatedAt)
+        //                        .ToListAsync();
+
+        //        var formattedMessages = messages.Select(m => new
+        //        {
+        //            text = m.Content,
+        //            senderMemberId = m.SenderMemberId,
+        //            messageType = m.MessageType,
+        //            parentId = m.ParentId,
+        //            id = m.Id,
+        //        }).ToList();
+
+        //    results.Add(new
+        //         {
+        //             conversationId = conversation.Id,
+        //             name = user?.FullName ?? "Không rõ",
+        //             avatar = "https://i.pravatar.cc/150?img=1",
+        //             messages = formattedMessages,
+        //         });
+        //    //}
+
+        //    return Ok(results);
+        //}
 
         public class ChatRes {
             public string ConversationId { get; set; }

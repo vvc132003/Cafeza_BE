@@ -133,8 +133,10 @@ namespace Cafeza_BE.Controllers
             }
 
             var drink = await _drink.Find(d => d.Id == res.Drink.Id).FirstOrDefaultAsync();
+            var update = Builders<Drink>.Update.Inc(d => d.Quantity, -1);
+            await _drink.UpdateOneAsync(d => d.Id == res.Drink.Id, update);
 
-            if(drink.Quantity ==0) {
+            if (drink.Quantity ==0) {
                 return Ok(false);
             }
 
