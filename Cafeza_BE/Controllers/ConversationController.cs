@@ -464,14 +464,7 @@ namespace Cafeza_BE.Controllers
         {
             string messageType = GetMessageType(request.Content);
 
-            var responseToSend = new
-            {
-                request.ConversationId,
-                request.Content,
-                request.SenderMemberId,
-                LastMessage = request.Content,
-                MessageType = messageType
-            };
+            
             var messDTO = new MessageDTO
             {
                 SenderMemberId = request.SenderMemberId,
@@ -483,6 +476,17 @@ namespace Cafeza_BE.Controllers
 
             var newMess = ToEntityMessage(messDTO);
             await _message.InsertOneAsync(newMess);
+
+            var responseToSend = new
+            {
+                request.ConversationId,
+                request.Content,
+                request.SenderMemberId,
+                LastMessage = request.Content,
+                MessageType = messageType,
+                ParentId = request.ParentId,
+                Id = newMess.Id,
+            };
 
             await _conversation.UpdateOneAsync(
                               co => co.Id == request.ConversationId,
@@ -500,7 +504,6 @@ namespace Cafeza_BE.Controllers
                 await _hubContext.Clients.Group(member.MemberId).SendAsync("LoadConversation", responseToSend);
             }
 
-            return Ok();
             return Ok();
         }
 
