@@ -215,9 +215,10 @@ namespace Cafeza_BE.Controllers
                 {
                     conversationId = conversation.Id,
                     name = user?.FullName ?? "Không rõ",
-                    avatar = "https://i.pravatar.cc/150?img=1",
+                    avatar = "https://i.pinimg.com/736x/bc/43/98/bc439871417621836a0eeea768d60944.jpg",
                     lastMessage,
                     messageType = messages.LastOrDefault()?.MessageType,
+                    createdAt = messages.LastOrDefault()?.CreatedAt,
                 });
             }
 
@@ -253,8 +254,13 @@ namespace Cafeza_BE.Controllers
                             .Limit(pageSize)
                             .ToListAsync();
 
+
             // Vì sort descending, nên đảo lại cho hiển thị theo thứ tự thời gian tăng dần
             messages.Reverse();
+
+            var senderIds = messages.Select(m => m.SenderMemberId).Distinct().ToList();
+            var users = await _user.Find(u => senderIds.Contains(u.Id)).ToListAsync();
+            var userDict = users.ToDictionary(u => u.Id, u => u.FullName);
 
             var formattedMessages = messages.Select(m => new
             {
@@ -263,13 +269,15 @@ namespace Cafeza_BE.Controllers
                 messageType = m.MessageType,
                 parentId = m.ParentId,
                 id = m.Id,
+                fullename = userDict.ContainsKey(m.SenderMemberId) ? userDict[m.SenderMemberId] : "Không rõ",
+                createdAt = m.CreatedAt,
             }).ToList();
 
             results.Add(new
             {
                 conversationId = conversation.Id,
                 name = user?.FullName ?? "Không rõ",
-                avatar = "https://i.pravatar.cc/150?img=1",
+                avatar = "https://i.pinimg.com/736x/bc/43/98/bc439871417621836a0eeea768d60944.jpg",
                 messages = formattedMessages,
                 page = page,
                 pageSize = pageSize
@@ -336,11 +344,12 @@ namespace Cafeza_BE.Controllers
         public async Task<IActionResult> createChat([FromBody] ChatRes request)
         {
             string messageType = GetMessageType(request.Content);
+            var content = string.IsNullOrWhiteSpace(request.Content) ? "👍" : request.Content;
 
             var messDTO = new MessageDTO
             {
                 SenderMemberId = request.SenderMemberId,
-                Content = request.Content,
+                Content = content,
                 ConversationId = request.ConversationId,
                 MessageType = messageType,
                 ParentId  = null
@@ -348,7 +357,8 @@ namespace Cafeza_BE.Controllers
 
             var newMess = ToEntityMessage(messDTO);
             await _message.InsertOneAsync(newMess);
-
+            //var message = await _message.Find(m => m.Id == messDTO.ParentId).FirstOrDefaultAsync();
+            var fullName = await _user.Find(u => u.Id == messDTO.SenderMemberId).FirstOrDefaultAsync();
             var responseToSend = new
             {
                 request.ConversationId,
@@ -358,6 +368,8 @@ namespace Cafeza_BE.Controllers
                 MessageType = messageType,
                 Id = newMess.Id,
                 ParentId = newMess.ParentId ?? null,
+                createdAt = newMess.CreatedAt,
+                fullename = fullName.FullName,
             };
 
             await _conversation.UpdateOneAsync(
@@ -382,17 +394,17 @@ namespace Cafeza_BE.Controllers
         private string GetMessageType(string content)
         {
             if (string.IsNullOrWhiteSpace(content))
-                return "text";
+                return "like";
 
-            // ✅ Nếu là video base64
+            //if (content == "__LIKE__")
+            //    return "like";
+
             if (content.StartsWith("data:video/", StringComparison.OrdinalIgnoreCase))
                 return "video";
 
-            // ✅ Nếu là ảnh base64
             if (content.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
                 return "image";
 
-            // ✅ Nếu là URL hợp lệ
             if (Uri.IsWellFormedUriString(content, UriKind.Absolute))
             {
                 string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
@@ -405,7 +417,6 @@ namespace Cafeza_BE.Controllers
                 if (videoExtensions.Any(ext => lowerContent.EndsWith(ext)))
                     return "video";
 
-                // ✅ Nếu là YouTube URL
                 if (lowerContent.Contains("youtube.com/watch") || lowerContent.Contains("youtu.be/"))
                     return "video";
 
@@ -477,6 +488,9 @@ namespace Cafeza_BE.Controllers
             var newMess = ToEntityMessage(messDTO);
             await _message.InsertOneAsync(newMess);
 
+            var message = await _message.Find(m => m.Id == request.ParentId).FirstOrDefaultAsync();
+            var fullName = await _user.Find(u => u.Id == message.SenderMemberId).FirstOrDefaultAsync();
+
             var responseToSend = new
             {
                 request.ConversationId,
@@ -486,6 +500,9 @@ namespace Cafeza_BE.Controllers
                 MessageType = messageType,
                 ParentId = request.ParentId,
                 Id = newMess.Id,
+                fullename = fullName.FullName,
+                createdAt = newMess.CreatedAt,
+
             };
 
             await _conversation.UpdateOneAsync(
