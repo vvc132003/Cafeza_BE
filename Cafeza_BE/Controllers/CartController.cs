@@ -74,6 +74,7 @@ namespace Cafeza_BE.Controllers
                     Total = cartdetail.Quantity * cartdetail.UnitPrice,
                     Note = cartdetail.Note,
                     Status = cartdetail.Status,
+                    Image = dink.ImagePath,
                 });
             }
             return data;
@@ -176,12 +177,19 @@ namespace Cafeza_BE.Controllers
 
         private ExtenCart ToExtenCartDetail(CartDetail entity, object drink)
         {
-            string drinkName = null;
+            string drinkName = "";
+            string image = "";
 
             if (drink is DrinkDTO drinkDto)
-                drinkName = drinkDto.Name;
+            {
+                drinkName = drinkDto.Name;  
+                image = drinkDto.ImagePath;    
+            }
             else if (drink is Drink drinkEntity)
-                drinkName = drinkEntity.Name;
+            {
+                drinkName = drinkEntity.Name;  
+                image = drinkEntity.ImagePath;     
+            }
 
             return new ExtenCart
             {
@@ -193,9 +201,11 @@ namespace Cafeza_BE.Controllers
                 UnitPrice = entity.UnitPrice,
                 Total = entity.Total,
                 Note = entity.Note,
-                Status = entity.Status
+                Status = entity.Status,
+                Image = image
             };
         }
+
 
         public class ExtenCart
         {
@@ -208,6 +218,7 @@ namespace Cafeza_BE.Controllers
             public decimal Total;
             public string? Note { get; set; }
             public string? Status { get; set; }
+            public string ? Image { get; set; }
         }
 
 
@@ -225,5 +236,128 @@ namespace Cafeza_BE.Controllers
                 Note = dto.Note,
             };
         }
+
+        [HttpGet("decreaseQuantity/{id}")]
+        public async Task<IActionResult> DecreaseQuantity(string id)
+        {
+            var cartdetail = await _cartdetail.Find(c => c.Id == id).FirstOrDefaultAsync();
+            if (cartdetail == null) return NotFound();
+            var drink = await _drink.Find(d => d.Id == cartdetail.DrinkId).FirstOrDefaultAsync();
+            if (drink == null) return NotFound();
+            var update = Builders<Drink>.Update.Inc(d => d.Quantity, +1);
+            await _drink.UpdateOneAsync(d => d.Id == cartdetail.DrinkId, update);
+            cartdetail.Quantity -= 1;
+            cartdetail.Total = cartdetail.Quantity * drink.Price;
+            var updateCartDetail = Builders<CartDetail>.Update
+                                     .Set(c => c.Quantity, cartdetail.Quantity)
+                                     .Set(c => c.Total, cartdetail.Total);
+
+            await _cartdetail.UpdateOneAsync(c => c.Id == cartdetail.Id, updateCartDetail);
+
+            return Ok();
+        }
+
+        [HttpGet("increaseQuantity/{id}")]
+        public async Task<IActionResult> IncreaseQuantity(string id)
+        {
+            var cartdetail = await _cartdetail.Find(c => c.Id == id).FirstOrDefaultAsync();
+            if (cartdetail == null) return NotFound();
+            var drink = await _drink.Find(d => d.Id == cartdetail.DrinkId).FirstOrDefaultAsync();
+            if (drink == null) return NotFound();
+            var update = Builders<Drink>.Update.Inc(d => d.Quantity, -1);
+            await _drink.UpdateOneAsync(d => d.Id == cartdetail.DrinkId, update);
+            cartdetail.Quantity += 1;
+            cartdetail.Total = cartdetail.Quantity * drink.Price;
+            var updateCartDetail = Builders<CartDetail>.Update
+                                     .Set(c => c.Quantity, cartdetail.Quantity)
+                                     .Set(c => c.Total, cartdetail.Total);
+
+            await _cartdetail.UpdateOneAsync(c => c.Id == cartdetail.Id, updateCartDetail);
+
+            return Ok();
+        }
+
+        /// hàm decreaseQuantity và increaseQuantity gộp thành hàm changeQuantity
+
+        [HttpGet("changeQuantity/{drinkId}/{cartId}")]
+        public async Task<IActionResult> ChangeQuantity(string drinkId, string cartId, [FromQuery] int change)
+        {
+            var cartdetail = await _cartdetail.Find(c => c.DrinkId == drinkId && c.CartId == cartId).FirstOrDefaultAsync();
+            if (cartdetail == null) return NotFound("Cart detail not found.");
+
+            var drink = await _drink.Find(d => d.Id == drinkId).FirstOrDefaultAsync();
+            if (drink == null) return NotFound("Drink not found.");
+
+            int newQuantity = cartdetail.Quantity + change;
+            if (newQuantity < 0)
+            {
+                return BadRequest("Quantity cannot be negative.");
+            }
+
+            int stockChange = -change;
+
+            if (change > 0 && drink.Quantity < change)
+            {
+                return BadRequest("Not enough stock available.");
+            }
+
+            var updateDrink = Builders<Drink>.Update.Inc(d => d.Quantity, stockChange);
+            await _drink.UpdateOneAsync(d => d.Id == drink.Id, updateDrink);
+
+            cartdetail.Quantity = newQuantity;
+            cartdetail.Total = cartdetail.Quantity * drink.Price;
+
+            var updateCartDetail = Builders<CartDetail>.Update
+                .Set(c => c.Quantity, cartdetail.Quantity)
+                .Set(c => c.Total, cartdetail.Total);
+
+            await _cartdetail.UpdateOneAsync(c => c.Id == cartdetail.Id, updateCartDetail);
+
+            return Ok(new
+            {
+                cartdetail.Quantity,
+                cartdetail.Total,
+                DrinkStockLeft = drink.Quantity + stockChange
+            });
+        }
+
+
+        [HttpGet("updateStatus/{id}/{status}")]
+        public async Task<IActionResult> UpdateStatus(string id, string status)
+        {
+            var result = await _cartdetail.UpdateOneAsync(
+                c => c.Id == id,
+                Builders<CartDetail>.Update.Set(c => c.Status, status));
+
+            if (result.ModifiedCount == 0)
+                return NotFound();
+
+            return Ok();
+        }
+
+        public class UpdateStatusRequest
+        {
+            public List<string> Ids { get; set; }
+            public string Status { get; set; }
+        }
+
+        [HttpPost("updateStatusMultiple")]
+        public async Task<IActionResult> UpdateStatusMultiple([FromBody] UpdateStatusRequest request)
+        {
+            if (request?.Ids == null || request.Ids.Count == 0)
+                return BadRequest("Danh sách id trống");
+
+            var filter = Builders<CartDetail>.Filter.In(c => c.Id, request.Ids);
+            var update = Builders<CartDetail>.Update.Set(c => c.Status, request.Status);
+
+            var result = await _cartdetail.UpdateManyAsync(filter, update);
+
+            if (result.ModifiedCount == 0)
+                return NotFound("Không tìm thấy cartdetail hoặc không có thay đổi");
+
+            return Ok(new { updatedCount = result.ModifiedCount });
+        }
+
+
     }
 }

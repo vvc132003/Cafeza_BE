@@ -17,6 +17,48 @@
   },
   {
     "ContainingType": "Cafeza_BE.Controllers.CartController",
+    "Method": "ChangeQuantity",
+    "RelativePath": "api/Cart/changeQuantity/{drinkId}/{cartId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "drinkId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "cartId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "change",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.CartController",
+    "Method": "DecreaseQuantity",
+    "RelativePath": "api/Cart/decreaseQuantity/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.CartController",
     "Method": "GetCurrentCartByUserIdAsync",
     "RelativePath": "api/Cart/getCurrentCartByUserIdAsync/{userId}",
     "HttpMethod": "GET",
@@ -26,6 +68,59 @@
       {
         "Name": "userId",
         "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.CartController",
+    "Method": "IncreaseQuantity",
+    "RelativePath": "api/Cart/increaseQuantity/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.CartController",
+    "Method": "UpdateStatus",
+    "RelativePath": "api/Cart/updateStatus/{id}/{status}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "status",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.CartController",
+    "Method": "UpdateStatusMultiple",
+    "RelativePath": "api/Cart/updateStatusMultiple",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Cafeza_BE.Controllers.CartController\u002BUpdateStatusRequest",
         "IsRequired": true
       }
     ],
@@ -313,6 +408,22 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.DrinkController",
+    "Method": "GetRandomDrinks",
+    "RelativePath": "api/Drink/random",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "count",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "Cafeza_BE.Controllers.EmployeeController",

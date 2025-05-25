@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Model;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using SharpCompress.Common;
 
@@ -130,6 +131,20 @@ namespace Cafeza_BE.Controllers
             if (result.DeletedCount == 0)
                 return NotFound();
             return NoContent();
+        }
+
+        [HttpGet("random")]
+        public async Task<IActionResult> GetRandomDrinks([FromQuery] int count = 6)
+        {
+            var pipeline = new BsonDocument[]
+            {
+                new BsonDocument("$match", new BsonDocument("Status", "available")),
+                new BsonDocument("$sample", new BsonDocument("size", count))
+            };
+
+            var randomDrinks = await _drink.Aggregate<Drink>(pipeline).ToListAsync();
+
+            return Ok(randomDrinks);
         }
     }
 }
