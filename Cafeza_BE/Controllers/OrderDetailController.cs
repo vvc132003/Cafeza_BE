@@ -79,7 +79,8 @@ namespace Cafeza_BE.Controllers
             if (request == null) {
                 return null;
             }
-            var orderdetail = await _orderDetail.Find(or => or.OrderId == request.OrderDetailDto.OrderId && or.DrinkId == request.OrderDetailDto.DrinkId).FirstOrDefaultAsync();
+            var orderdetail = await _orderDetail.Find(or => or.OrderId == request.OrderDetailDto.OrderId && or.DrinkId == request.OrderDetailDto.DrinkId &&
+            (or.Status == null || or.Status == "waiting")).FirstOrDefaultAsync();
             var drink = await _drink.Find(dr => dr.Id == request.OrderDetailDto.DrinkId).FirstOrDefaultAsync();
             drink.Quantity -= 1;
             await _drink.ReplaceOneAsync(x => x.Id == drink.Id, drink);
@@ -321,6 +322,39 @@ namespace Cafeza_BE.Controllers
             return NoContent();
         }
 
+
+        [HttpGet("getAllOrdersDetail")]
+        public async Task<IActionResult> GetAllOrdersDetail()
+        {
+            var data = new List<object>();
+
+            //var orderDetails = await _orderDetail.Find(Builders<OrderDetail>.Filter.Empty).ToListAsync();
+            var orderDetails = await _orderDetail
+                .Find(o => o.Status != null && o.Status != "")
+                .ToListAsync();
+
+            foreach (var orderdetail in orderDetails) {
+                var drink = await _drink.Find(d => d.Id == orderdetail.DrinkId).FirstOrDefaultAsync();
+                var order = await _order.Find(d => d.Id == orderdetail.OrderId).FirstOrDefaultAsync();
+                var table = await _table.Find(d => d.Id == order.TableId).FirstOrDefaultAsync();
+
+                data.Add(new ExtenOrderDetailStatus
+                {
+                    OrderId = orderdetail.OrderId,
+                    OrderdetailId = orderdetail.Id,
+                    DrinkId = orderdetail.DrinkId,
+                    DrinkName = drink.Name,
+                    Quantity = orderdetail.Quantity,
+                    UnitPrice = orderdetail.UnitPrice,
+                    Total  = orderdetail.Total,
+                    Status = orderdetail.Status,
+                    Note = orderdetail.Note,
+                    TableName = table.TableName,
+                });
+            }
+            return Ok(data);
+        }
+
         private ExtenOrderDetail ToExtenOrderDetail(OrderDetail entity, object drink)
         {
             string drinkName = null;
@@ -353,7 +387,8 @@ namespace Cafeza_BE.Controllers
                 Quantity = dto.Quantity,
                 UnitPrice = dto.UnitPrice,
                 Total = dto.UnitPrice * dto.Quantity,
-                Note = dto.Note
+                Note = dto.Note,
+                Status = dto.Status,
             };
         }
 
@@ -368,6 +403,11 @@ namespace Cafeza_BE.Controllers
             public decimal? UnitPrice { get; set; }
             public decimal? Total { get; set; }
             public string? Note { get; set; }
+        }
+        public class ExtenOrderDetailStatus : ExtenOrderDetail
+        {
+            public string? Status { get; set; } // kế thừa vì có nhiều dữ liệu trùng lặp
+            public string? TableName { get; set; }
         }
     }
 }

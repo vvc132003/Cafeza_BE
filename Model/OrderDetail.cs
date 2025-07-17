@@ -19,6 +19,8 @@ namespace Model
         public decimal UnitPrice { get; set; }
         public decimal Total;
         public string? Note { get; set; }
+        public string? Status { get; set; }
+
     }
     public class OrderDetailDTO
     {
@@ -29,5 +31,7 @@ namespace Model
         public decimal UnitPrice { get; set; }
         public decimal Total;
         public string? Note { get; set; }
+        public string? Status { get; set; }
+
     }
 }

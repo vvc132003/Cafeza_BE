@@ -304,6 +304,13 @@ namespace Cafeza_BE.Controllers
             var updateDrink = Builders<Drink>.Update.Inc(d => d.Quantity, stockChange);
             await _drink.UpdateOneAsync(d => d.Id == drink.Id, updateDrink);
 
+
+            if (newQuantity == 0)
+            {
+                await _cartdetail.DeleteOneAsync(c => c.Id == cartdetail.Id);
+                return Ok(true);
+            }
+
             cartdetail.Quantity = newQuantity;
             cartdetail.Total = cartdetail.Quantity * drink.Price;
 

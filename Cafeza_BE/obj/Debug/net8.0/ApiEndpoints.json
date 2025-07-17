@@ -185,8 +185,40 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Cafeza_BE.Controllers.ChatController",
+    "Method": "CreateChat",
+    "RelativePath": "api/Chat/createChat",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Cafeza_BE.Controllers.ChatController\u002BChatResAI",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.ChatController",
+    "Method": "SendMessage",
+    "RelativePath": "api/Chat/createChatAI",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Cafeza_BE.Controllers.ChatController\u002BChatRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Cafeza_BE.Controllers.ConversationController",
-    "Method": "createChat",
+    "Method": "CreateChat",
     "RelativePath": "api/Conversation/createChat",
     "HttpMethod": "POST",
     "IsController": true,
@@ -211,6 +243,22 @@
       {
         "Name": "request",
         "Type": "Cafeza_BE.Controllers.ConversationController\u002BCreateConverstationRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.ConversationController",
+    "Method": "CreateConverstationAI",
+    "RelativePath": "api/Conversation/createConverstationAI",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Cafeza_BE.Controllers.ConversationController\u002BCreateConverstationAIRequest",
         "IsRequired": true
       }
     ],
@@ -609,6 +657,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.OrderDetailController",
+    "Method": "GetAllOrdersDetail",
+    "RelativePath": "api/OrderDetail/getAllOrdersDetail",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

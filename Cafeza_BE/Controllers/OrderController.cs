@@ -255,7 +255,7 @@ namespace Cafeza_BE.Controllers
                                     );
 
             // cập nhật order
-            var order = await _order.Find(o => o.TableId == data.FromTableId).FirstOrDefaultAsync();
+            var order = await _order.Find(o => o.TableId == data.FromTableId && o.Status == "Chờ thanh toán").FirstOrDefaultAsync();
             //order.TableId = data.ToTableId;
             //await _order.ReplaceOneAsync(o => o.Id == order.Id, order);
             await _order.UpdateOneAsync(

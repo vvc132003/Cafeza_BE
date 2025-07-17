@@ -37,7 +37,7 @@ namespace Cafeza_BE.Controllers
             public string userId2 { get; set; } // custoemr or login
         }
 
-        
+        /// chat bình thường giữa mọi người
         [HttpPost("createConverstation")]
         public async Task<IActionResult> CreateConverstation([FromBody] CreateConverstationRequest request)
         {
@@ -341,7 +341,7 @@ namespace Cafeza_BE.Controllers
 
 
         [HttpPost("createChat")]
-        public async Task<IActionResult> createChat([FromBody] ChatRes request)
+        public async Task<IActionResult> CreateChat([FromBody] ChatRes request)
         {
             string messageType = GetMessageType(request.Content);
             var content = string.IsNullOrWhiteSpace(request.Content) ? "👍" : request.Content;
@@ -522,6 +522,96 @@ namespace Cafeza_BE.Controllers
             }
 
             return Ok();
+        }
+
+
+        public class CreateConverstationAIRequest
+        {
+            public string role { get; set; } // role
+            public string userId2 { get; set; } // custoemr or login
+        }
+
+        /// chat AI
+        [HttpPost("createConverstationAI")]
+        public async Task<IActionResult> CreateConverstationAI([FromBody] CreateConverstationAIRequest request)
+        {
+            //var employeeDetail = await _
+            //var user = await _user.Find(u => u.Role ===)
+            // 1. Tìm tất cả các cuộc hội thoại 1-1
+
+            var oneOnOneConversations = await _conversation
+              .Find(c => c.ConversationType == "1-1")
+              .ToListAsync();
+            // 2. Lặp qua từng cuộc hội thoại để kiểm tra thành viên
+            //var results = new List<object>(); // lấy dwxl iệu chat
+
+            foreach (var conversation in oneOnOneConversations)
+            {
+                // Lấy danh sách các thành viên trong cuộc hội thoại hiện tại
+                var members = await _conversationMembers
+                .Find(m => m.ConversationId == conversation.Id)
+                .ToListAsync();
+                // Lấy danh sách ID thành viên
+                var memberIds = members.Select(m => m.MemberId).ToList();
+
+
+                // 3. Kiểm tra xem cuộc hội thoại có đúng 2 người, và đó là userId1 & userId2 (bot với user)
+                if (memberIds.Count == 2 && memberIds.Contains("683aa60a6a13923e9d67b835") && memberIds.Contains(request.userId2))
+                {
+                    return Ok(true);
+                }
+            }
+            // 4. Nếu không tìm thấy, tạo mới một cuộc hội thoại 1-1
+            if (request.role != "customer")
+            {
+                return BadRequest("Chỉ khách hàng mới được tạo cuộc hội thoại mới.");
+            }
+
+            var newConversation = new Conversation
+            {
+                Title = null,                         // Cuộc hội thoại 1-1 không cần tiêu đề
+                ConversationType = "1-1",             // Kiểu cuộc hội thoại là "1-1"
+                CreatedAt = DateTime.UtcNow,          // Ghi lại thời điểm tạo
+                UpdatedAt = DateTime.UtcNow           // Ghi lại thời điểm cập nhật
+            };
+
+            // Lưu cuộc hội thoại mới vào cơ sở dữ liệu
+            await _conversation.InsertOneAsync(newConversation);
+
+            // 5. Tạo thông tin thành viên A (người khởi tạo hoặc đối tượng tham gia)
+            var memberA = new ConversationMembers
+            {
+                ConversationId = newConversation.Id,
+                MemberId = "683aa60a6a13923e9d67b835",
+                MemberType = "bot",              
+                CreatedAt = DateTime.UtcNow
+            };
+
+            // 6. Tạo thông tin thành viên B
+            var memberB = new ConversationMembers
+            {
+                ConversationId = newConversation.Id,
+                MemberId = request.userId2,
+                MemberType = "customer",             
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _conversationMembers.InsertManyAsync(new[] { memberA, memberB });
+
+            // 7 tạo mess cho bot khi hỏi khách hàng nếu cần
+            var messDTO = new MessageDTO
+            {
+                SenderMemberId = "683aa60a6a13923e9d67b835",
+                Content = "Chào bạn, bạn cần tôi giúp gì?",
+                ConversationId = newConversation.Id,
+                MessageType = "text",
+                ParentId = null
+            };
+
+            var newMess = ToEntityMessage(messDTO);
+            await _message.InsertOneAsync(newMess);
+
+            return Ok(newConversation);
         }
 
     }
