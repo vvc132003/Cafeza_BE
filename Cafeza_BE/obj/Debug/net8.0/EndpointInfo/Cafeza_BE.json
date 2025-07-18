@@ -1097,6 +1097,36 @@
         }
       }
     },
+    "/api/OrderDetail/updateStatusdetail/{orderdetailId}/{status}": {
+      "get": {
+        "tags": [
+          "OrderDetail"
+        ],
+        "parameters": [
+          {
+            "name": "orderdetailId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/OrderDetail/exportInvoice/{orderId}": {
       "get": {
         "tags": [
@@ -1962,6 +1992,11 @@
           },
           "status": {
             "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },

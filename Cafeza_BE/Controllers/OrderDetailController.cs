@@ -9,6 +9,7 @@ using MongoDB.Driver;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using static QuestPDF.Helpers.Colors;
 
 namespace Cafeza_BE.Controllers
 {
@@ -86,6 +87,7 @@ namespace Cafeza_BE.Controllers
             await _drink.ReplaceOneAsync(x => x.Id == drink.Id, drink);
             if (orderdetail == null) {
                 var entityOrderdetail = ToEntity(request.OrderDetailDto);
+                entityOrderdetail.CreatedAt = DateTime.UtcNow;
                 await _orderDetail.InsertOneAsync(entityOrderdetail);
                 var result = ToExtenOrderDetail(entityOrderdetail, request.drinkDTO);
                 await _hubContext.Clients.Group(entityOrderdetail.OrderId).SendAsync("LoadOrderId", result);
@@ -185,6 +187,15 @@ namespace Cafeza_BE.Controllers
             var result = ToExtenOrderDetail(orderdetail, drink);
             await _hubContext.Clients.Group(orderdetail.OrderId).SendAsync("LoadOrderId", result);
 
+            return Ok();
+        }
+
+        [HttpGet("updateStatusdetail/{orderdetailId}/{status}")]
+        public async Task<IActionResult> UpdateStatusdetail(string orderdetailId, string status)
+        {
+            var orderdetail = await _orderDetail.Find(o => o.Id == orderdetailId).FirstOrDefaultAsync();
+            orderdetail.Status = status;
+            await _orderDetail.ReplaceOneAsync(x => x.Id == orderdetailId, orderdetail);
             return Ok();
         }
 
@@ -350,6 +361,7 @@ namespace Cafeza_BE.Controllers
                     Status = orderdetail.Status,
                     Note = orderdetail.Note,
                     TableName = table.TableName,
+                    CreatedAt = orderdetail.CreatedAt,
                 });
             }
             return Ok(data);
@@ -408,6 +420,8 @@ namespace Cafeza_BE.Controllers
         {
             public string? Status { get; set; } // kế thừa vì có nhiều dữ liệu trùng lặp
             public string? TableName { get; set; }
+            public DateTime? CreatedAt { get; set; }
+
         }
     }
 }

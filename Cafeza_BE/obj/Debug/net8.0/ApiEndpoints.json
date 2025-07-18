@@ -686,6 +686,27 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Cafeza_BE.Controllers.OrderDetailController",
+    "Method": "UpdateStatusdetail",
+    "RelativePath": "api/OrderDetail/updateStatusdetail/{orderdetailId}/{status}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderdetailId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "status",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Cafeza_BE.Controllers.TableController",
     "Method": "GetAllTables",
     "RelativePath": "api/Table",

@@ -20,6 +20,8 @@ namespace Model
         public decimal Total;
         public string? Note { get; set; }
         public string? Status { get; set; }
+        public DateTime? CreatedAt { get; set; }
+
 
     }
     public class OrderDetailDTO
@@ -32,6 +34,8 @@ namespace Model
         public decimal Total;
         public string? Note { get; set; }
         public string? Status { get; set; }
+        public DateTime? CreatedAt { get; set; }
+
 
     }
 }
