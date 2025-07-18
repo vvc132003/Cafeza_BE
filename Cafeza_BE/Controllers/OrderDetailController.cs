@@ -43,7 +43,7 @@ namespace Cafeza_BE.Controllers
         public async Task<IActionResult> GetOrdersByOrderId(string orderId)
         {
             var data = new List<object>();
-            var orderDetails = await _orderDetail.Find(o => o.OrderId == orderId).ToListAsync();
+            var orderDetails = await _orderDetail.Find(o => o.OrderId == orderId && o.Status != "delete").ToListAsync();
             //Lấy danh sách các DrinkId duy nhất
             var drinkIds = orderDetails.Select(o => o.DrinkId).Distinct().ToList();
             //Lấy thông tin đồ uống một lần
@@ -53,7 +53,7 @@ namespace Cafeza_BE.Controllers
 
             foreach (var item in orderDetails) {
                 var drinkName = drinkDict.ContainsKey(item.DrinkId) ? drinkDict[item.DrinkId].Name : "Không xác định";
-                data.Add(new ExtenOrderDetail
+                data.Add(new ExtenOrderDetailStatus
                 {
                     OrderdetailId = item.Id,
                     OrderId = item.OrderId,
@@ -63,6 +63,7 @@ namespace Cafeza_BE.Controllers
                     UnitPrice = item.UnitPrice,
                     Total = item.Total,
                     Note = item.Note,
+                    Status = item.Status
                 });
             }
             return Ok(data);
@@ -89,8 +90,9 @@ namespace Cafeza_BE.Controllers
                 var entityOrderdetail = ToEntity(request.OrderDetailDto);
                 entityOrderdetail.CreatedAt = DateTime.UtcNow;
                 await _orderDetail.InsertOneAsync(entityOrderdetail);
-                var result = ToExtenOrderDetail(entityOrderdetail, request.drinkDTO);
+                var result = await ToExtenOrderDetail(entityOrderdetail, request.drinkDTO);
                 await _hubContext.Clients.Group(entityOrderdetail.OrderId).SendAsync("LoadOrderId", result);
+                await _hubContext.Clients.All.SendAsync("loadStatusOrderdetail", result);
                 return Ok(result);
 
             }
@@ -99,8 +101,9 @@ namespace Cafeza_BE.Controllers
                 orderdetail.Quantity += 1;
                 orderdetail.Total = orderdetail.UnitPrice * orderdetail.Quantity;
                 await _orderDetail.ReplaceOneAsync(x => x.Id == orderdetail.Id, orderdetail);
-                var result = ToExtenOrderDetail(orderdetail, request.drinkDTO);
+                var result = await ToExtenOrderDetail(orderdetail, request.drinkDTO);
                 await _hubContext.Clients.Group(orderdetail.OrderId).SendAsync("LoadOrderId", result);
+                await _hubContext.Clients.All.SendAsync("loadStatusOrderdetail", result);
                 return Ok(result);
             }
 
@@ -184,7 +187,7 @@ namespace Cafeza_BE.Controllers
             drink.Quantity -= delta;
             await _drink.ReplaceOneAsync(x => x.Id == drink.Id, drink);
 
-            var result = ToExtenOrderDetail(orderdetail, drink);
+            var result = await ToExtenOrderDetail(orderdetail, drink);
             await _hubContext.Clients.Group(orderdetail.OrderId).SendAsync("LoadOrderId", result);
 
             return Ok();
@@ -317,7 +320,7 @@ namespace Cafeza_BE.Controllers
                 await _orderDetail.ReplaceOneAsync(x => x.Id == orderdetail.Id, orderdetail);
                 drink.Quantity += 1;
                 await _drink.ReplaceOneAsync(x => x.Id == drink.Id, drink);
-                var result = ToExtenOrderDetail(orderdetail, drink);
+                var result = await ToExtenOrderDetail(orderdetail, drink);
                 await _hubContext.Clients.Group(orderdetail.OrderId).SendAsync("LoadOrderId", result);
             }
             else
@@ -325,7 +328,7 @@ namespace Cafeza_BE.Controllers
                 await _orderDetail.DeleteOneAsync(x => x.Id == orderdetail.Id);
                 drink.Quantity += 1;
                 await _drink.ReplaceOneAsync(x => x.Id == drink.Id, drink);
-                var result = ToExtenOrderDetail(orderdetail, drink);    
+                var result = await ToExtenOrderDetail(orderdetail, drink);    
                 await _hubContext.Clients.Group(orderdetail.OrderId).SendAsync("RemoveOrderDetailId", result);
             }
             
@@ -367,7 +370,7 @@ namespace Cafeza_BE.Controllers
             return Ok(data);
         }
 
-        private ExtenOrderDetail ToExtenOrderDetail(OrderDetail entity, object drink)
+        private async Task<ExtenOrderDetailStatus> ToExtenOrderDetail(OrderDetail entity, object drink)
         {
             string drinkName = null;
 
@@ -376,7 +379,10 @@ namespace Cafeza_BE.Controllers
             else if (drink is Drink drinkEntity)
                 drinkName = drinkEntity.Name;
 
-            return new ExtenOrderDetail
+            var order = await _order.Find(o => o.Id == entity.OrderId).FirstOrDefaultAsync();
+            var table = await _table.Find(t => t.Id == order.TableId).FirstOrDefaultAsync();
+
+            return new ExtenOrderDetailStatus
             {
                 OrderdetailId = entity.Id,
                 OrderId = entity.OrderId,
@@ -386,6 +392,8 @@ namespace Cafeza_BE.Controllers
                 UnitPrice = entity.UnitPrice,
                 Total = entity.Total,
                 Note = entity.Note,
+                Status = entity.Status,
+                TableName = table.TableName
             };
         }
 
