@@ -393,7 +393,8 @@ namespace Cafeza_BE.Controllers
                 Total = entity.Total,
                 Note = entity.Note,
                 Status = entity.Status,
-                TableName = table.TableName
+                TableName = table.TableName,
+                CreatedAt = entity.CreatedAt,
             };
         }
 
