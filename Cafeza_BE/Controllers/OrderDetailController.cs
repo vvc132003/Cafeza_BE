@@ -162,7 +162,7 @@ namespace Cafeza_BE.Controllers
             }
 
             var orderdetail = await _orderDetail
-                .Find(o => o.OrderId == request.ExtenOrderDetail.OrderId && o.DrinkId == request.ExtenOrderDetail.DrinkId)
+                .Find(o => o.OrderId == request.ExtenOrderDetail.OrderId && o.DrinkId == request.ExtenOrderDetail.DrinkId && o.Status == "waiting")
                 .FirstOrDefaultAsync();
 
             var drink = await _drink
@@ -189,6 +189,8 @@ namespace Cafeza_BE.Controllers
 
             var result = await ToExtenOrderDetail(orderdetail, drink);
             await _hubContext.Clients.Group(orderdetail.OrderId).SendAsync("LoadOrderId", result);
+            await _hubContext.Clients.All.SendAsync("loadStatusOrderdetail", result);
+
 
             return Ok();
         }

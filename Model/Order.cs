@@ -25,6 +25,8 @@ namespace Model
         public string? PaymentMethod { get; set; } = "Tiền mặt"; // "Tiền mặt", "Chuyển khoản", "Momo"
         public string? Status { get; set; } // Chờ thanh toán"  "Đã thanh toán", "Đã huỷ", "Đang xử lý"
         public string? Note { get; set; } // Ghi chú thêm
+        public string? Type { get; set; } // LOAI JĐƠN
+
     }
 
     public class OrderDTO
@@ -42,6 +44,9 @@ namespace Model
         public string? PaymentMethod { get; set; } // "Tiền mặt"; // "Tiền mặt", "Chuyển khoản", "Momo"
         public string? Status { get; set; } // Chờ thanh toán"  "Đã thanh toán", "Đã huỷ", "Đang xử lý"
         public string? Note { get; set; } // Ghi chú thêm
+        public string? Type { get; set; } // LOAI JĐƠN
+
+
     }
 
 }

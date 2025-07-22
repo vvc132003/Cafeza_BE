@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\controllers\\orderdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\controllers\\orderdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -17,10 +25,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\controllers\\orderdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\controllers\\orderdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\controllers\\drinkcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -38,24 +42,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\appsettings.json",
-              "RelativeDocumentMoniker": "Cafeza_BE\\appsettings.json",
-              "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\appsettings.json",
-              "RelativeToolTip": "Cafeza_BE\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-07-19T16:09:16.979Z",
+              "DocumentIndex": 1,
+              "Title": "OrderController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\OrderController.cs",
+              "RelativeDocumentMoniker": "Cafeza_BE\\Controllers\\OrderController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\OrderController.cs",
+              "RelativeToolTip": "Cafeza_BE\\Controllers\\OrderController.cs",
+              "ViewState": "AgIAAL8AAAAAAAAAAAAcwMkAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-22T13:03:42.717Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "MongoDBSettings.cs",
               "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\MongoDBSettings.cs",
               "RelativeDocumentMoniker": "Cafeza_BE\\MongoDBSettings.cs",
@@ -67,7 +71,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "MongoDbContext.cs",
               "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\DB\\MongoDbContext.cs",
               "RelativeDocumentMoniker": "Cafeza_BE\\DB\\MongoDbContext.cs",
@@ -79,7 +83,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Program.cs",
               "RelativeDocumentMoniker": "Cafeza_BE\\Program.cs",
@@ -91,7 +95,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "DrinkController.cs",
               "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\DrinkController.cs",
               "RelativeDocumentMoniker": "Cafeza_BE\\Controllers\\DrinkController.cs",
@@ -103,7 +107,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "SignalRHub.cs",
               "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Hub\\SignalRHub.cs",
               "RelativeDocumentMoniker": "Cafeza_BE\\Hub\\SignalRHub.cs",
@@ -115,15 +119,29 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "OrderDetailController.cs",
               "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\OrderDetailController.cs",
               "RelativeDocumentMoniker": "Cafeza_BE\\Controllers\\OrderDetailController.cs",
               "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\OrderDetailController.cs",
               "RelativeToolTip": "Cafeza_BE\\Controllers\\OrderDetailController.cs",
-              "ViewState": "AgIAAL8AAAAAAAAAAAAQwNYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAMoAAAAAAAAAAAAYwKcAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-17T13:33:05.429Z"
+              "WhenOpened": "2025-07-17T13:33:05.429Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\appsettings.json",
+              "RelativeDocumentMoniker": "Cafeza_BE\\appsettings.json",
+              "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\appsettings.json",
+              "RelativeToolTip": "Cafeza_BE\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-19T16:09:16.979Z",
+              "EditorCaption": ""
             }
           ]
         }

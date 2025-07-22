@@ -1959,6 +1959,10 @@
           "note": {
             "type": "string",
             "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

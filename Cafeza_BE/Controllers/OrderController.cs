@@ -207,7 +207,8 @@ namespace Cafeza_BE.Controllers
                 Note = dto.Note,
                 AmountPaid = dto.AmountPaid,
                 ChangeAmount = dto.ChangeAmount,
-                PaidAt = null
+                PaidAt = null,
+                Type = dto.Type,
             };
         }
 
