@@ -66,6 +66,8 @@ namespace Cafeza_BE.Controllers
                 FullNameCustomer = customer?.FullName ?? "Khách lẻ",
                 FullNameEmployee = employee?.FullName ?? "Nhân viên không xác định",
                 CreatedAt = order.CreatedAt,
+                Type = order.Type,
+
             });
             return Ok(data);
         }
@@ -80,6 +82,8 @@ namespace Cafeza_BE.Controllers
             public string? FullNameEmployee { get; set; }
             public string? FullNameCustomer { get; set; }
             public DateTime? CreatedAt { get; set; }
+            public string? Type { get; set; }
+
         }
 
         public class CreateOrderRequest

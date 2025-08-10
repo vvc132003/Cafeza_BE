@@ -790,6 +790,42 @@
         }
       }
     },
+    "/api/Drink/generateDrinkRevenueReport": {
+      "get": {
+        "tags": [
+          "Drink"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Drink/monthlyRevenue": {
+      "get": {
+        "tags": [
+          "Drink"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Drink/getMonthlyOrderCount": {
+      "get": {
+        "tags": [
+          "Drink"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Employee": {
       "post": {
         "tags": [

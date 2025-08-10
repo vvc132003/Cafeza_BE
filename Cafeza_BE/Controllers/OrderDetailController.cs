@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Model;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -87,7 +89,7 @@ namespace Cafeza_BE.Controllers
             drink.Quantity -= 1;
             await _drink.ReplaceOneAsync(x => x.Id == drink.Id, drink);
             if (orderdetail == null) {
-                var entityOrderdetail = ToEntity(request.OrderDetailDto);
+                var entityOrderdetail = await ToEntity(request.OrderDetailDto);
                 entityOrderdetail.CreatedAt = DateTime.UtcNow;
                 await _orderDetail.InsertOneAsync(entityOrderdetail);
                 var result = await ToExtenOrderDetail(entityOrderdetail, request.drinkDTO);
@@ -213,6 +215,13 @@ namespace Cafeza_BE.Controllers
             if (order == null)
                 return NotFound();
 
+            var customer = default(User);
+
+            if (order != null && order.CustomerId != null)
+            {
+                customer = await _user.Find(c => c.Id == order.CustomerId).FirstOrDefaultAsync();
+            }
+
             var orderDetails = await _orderDetail.Find(d => d.OrderId == orderId).ToListAsync();
 
             var drinkIds = orderDetails.Select(x => x.DrinkId).Distinct().ToList();
@@ -237,22 +246,22 @@ namespace Cafeza_BE.Controllers
                     page.Content().Column(col =>
                     {
                         col.Item().PaddingBottom(10).Text($"Ngày tạo: {DateTime.Now:dd/MM/yyyy HH:mm}");
-                        //col.Item().Element(e =>
-                        //{
-                        //    e.PaddingVertical(5).LineHorizontal(1);
-                        //});
+                        col.Item().PaddingBottom(10).Text($"Khách hàng: {(customer != null ? customer.FullName : "Khách lẻ")}");
+                        col.Item().PaddingBottom(10).Text($"Địa chỉ: {(customer != null ? customer.Address : "")}");
                         col.Item().PaddingBottom(10).LineHorizontal(1);
 
 
                         col.Item().Background(Colors.Grey.Lighten3).PaddingVertical(5).PaddingHorizontal(10)
                         .Row(row =>
                         {
+                            row.ConstantColumn(30).AlignCenter().Text("TT").Bold().FontSize(10);           
                             row.RelativeColumn().Text("Tên đồ uống").Bold().FontSize(10);
                             row.ConstantColumn(60).AlignCenter().Text("Giá bán").Bold().FontSize(10);
                             row.ConstantColumn(60).AlignCenter().Text("SL").Bold().FontSize(10);
                             row.ConstantColumn(80).AlignRight().Text("Thành tiền").Bold().FontSize(10);
                         });
 
+                        int stt = 1;
 
                         foreach (var item in orderDetails)
                         {
@@ -262,11 +271,13 @@ namespace Cafeza_BE.Controllers
                             col.Item().PaddingVertical(5).PaddingHorizontal(10)
                                 .Row(row =>
                                 {
+                                    row.ConstantColumn(30).AlignCenter().Text($"{stt}").FontSize(10); 
                                     row.RelativeColumn().Text(drink.Name).FontSize(10);
                                     row.ConstantColumn(60).AlignCenter().Text($"{drink.Price:N0} VNĐ").FontSize(10);
                                     row.ConstantColumn(60).AlignCenter().Text($"{item.Quantity}").FontSize(10);
                                     row.ConstantColumn(80).AlignRight().Text($"{item.UnitPrice * item.Quantity:N0} VNĐ").FontSize(10);
                                 });
+                            stt++;
                         }
 
                         //col.Item().Element(e =>
@@ -313,7 +324,7 @@ namespace Cafeza_BE.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var orderdetail = await _orderDetail.Find(or => or.Id == id).FirstOrDefaultAsync();
+            var orderdetail = await _orderDetail.AsQueryable().Where(or => or.Id == id).FirstOrDefaultAsync();
             var drink = await _drink.Find(dr => dr.Id == orderdetail.DrinkId).FirstOrDefaultAsync();
             if (orderdetail.Quantity > 1)
             {
@@ -400,9 +411,10 @@ namespace Cafeza_BE.Controllers
             };
         }
 
-        private OrderDetail ToEntity(OrderDetailDTO dto)
+        private async Task<OrderDetail> ToEntity(OrderDetailDTO dto)
         {
             if (dto == null) return null;
+            var order = await _order.Find(o => o.Id == dto.OrderId).FirstOrDefaultAsync();
             return new OrderDetail
             {
                 OrderId = dto.OrderId,
@@ -410,7 +422,7 @@ namespace Cafeza_BE.Controllers
                 Quantity = dto.Quantity,
                 UnitPrice = dto.UnitPrice,
                 Total = dto.UnitPrice * dto.Quantity,
-                Note = dto.Note,
+                Note = order.Type == "90" ? "mang về" : dto.Note,
                 Status = dto.Status,
             };
         }

@@ -459,6 +459,36 @@
   },
   {
     "ContainingType": "Cafeza_BE.Controllers.DrinkController",
+    "Method": "GenerateDrinkRevenueReportAsync",
+    "RelativePath": "api/Drink/generateDrinkRevenueReport",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.DrinkController",
+    "Method": "GetMonthlyOrderCountAsync",
+    "RelativePath": "api/Drink/getMonthlyOrderCount",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.DrinkController",
+    "Method": "GetMonthlyRevenue",
+    "RelativePath": "api/Drink/monthlyRevenue",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Cafeza_BE.Controllers.DrinkController",
     "Method": "GetRandomDrinks",
     "RelativePath": "api/Drink/random",
     "HttpMethod": "GET",

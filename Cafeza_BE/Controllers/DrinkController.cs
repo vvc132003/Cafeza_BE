@@ -9,6 +9,7 @@ using Model;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using SharpCompress.Common;
+using static Cafeza_BE.Controllers.DrinkController;
 
 namespace Cafeza_BE.Controllers
 {
@@ -18,6 +19,10 @@ namespace Cafeza_BE.Controllers
     {
         private readonly IMongoCollection<Drink> _drink;
         private readonly IMongoCollection<Category> _category;
+        private readonly IMongoCollection<OrderDetail> _orderdetail;
+        private readonly IMongoCollection<Order> _order;
+
+
         private readonly IHubContext<SignalRHub> _hubContext;
 
 
@@ -26,6 +31,8 @@ namespace Cafeza_BE.Controllers
             _drink = context.Drinks;
             _category = context.Categorys;
             _hubContext = hubContext;
+            _orderdetail = context.OrderDetails;
+            _order = context.Orders;
         }
 
         [Authorize(Roles = "Admin")]
@@ -146,5 +153,90 @@ namespace Cafeza_BE.Controllers
 
             return Ok(randomDrinks);
         }
+        [HttpGet("generateDrinkRevenueReport")]
+        public async Task<IActionResult> GenerateDrinkRevenueReportAsync()
+        {
+            var drinks = await _drink.Find(_ => true).ToListAsync();
+            var orderDetails = await _orderdetail.Find(_ => true).ToListAsync();
+
+            var drinkRevenues = drinks.Select(drink =>
+            {
+                var relatedOrders = orderDetails
+                    .Where(o => o.DrinkId == drink.Id);
+
+                var totalRevenue = relatedOrders
+                    .Sum(o => o.Quantity * o.Total);
+
+                return new GenerateDrinkRevenueReport
+                {
+                    DrinkId = drink.Id,
+                    DrinkName = drink.Name,
+                    TotalRevenue = totalRevenue
+                };
+            }).ToList();
+
+            var totalAllRevenue = drinkRevenues.Sum(r => r.TotalRevenue);
+
+            foreach (var item in drinkRevenues)
+            {
+                item.RevenuePercentage = totalAllRevenue > 0
+                    ? Math.Round((double)(item.TotalRevenue / totalAllRevenue * 100), 2)
+                    : 0;
+            }
+
+            return Ok(drinkRevenues);
+        }
+
+
+
+        public class GenerateDrinkRevenueReport
+        {
+            public string DrinkId { get; set; }
+            public string DrinkName { get; set; }
+            public decimal TotalRevenue { get; set; }
+            public double RevenuePercentage { get; set; }
+        }
+
+        [HttpGet("monthlyRevenue")]
+        public async Task<IActionResult> GetMonthlyRevenue()
+        {
+            var orders = await _order.Find(_ => true).ToListAsync();
+
+            var monthlyRevenue = orders
+                .Where(o => o.CreatedAt != null)
+                .GroupBy(o => new { o.CreatedAt?.Year, o.CreatedAt?.Month })
+                .Select(g => new
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    TotalRevenue = g.Sum(o => o.TotalAmount)
+                })
+                .OrderBy(x => x.Year).ThenBy(x => x.Month)
+                .ToList();
+
+            return Ok(monthlyRevenue);
+        }
+
+        [HttpGet("getMonthlyOrderCount")]
+        public async Task<IActionResult> GetMonthlyOrderCountAsync()
+        {
+            var orders = await _orderdetail.Find(_ => true).ToListAsync();
+
+            var monthlyOrderCount = orders
+                .GroupBy(o => new { Year = o.CreatedAt?.Year, Month = o.CreatedAt?.Month })
+                .Select(g => new
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    OrderCount = g.Count() 
+                })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
+                .ToList();
+
+            return Ok(monthlyOrderCount);
+        }
+
+
     }
 }

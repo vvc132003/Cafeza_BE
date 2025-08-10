@@ -112,7 +112,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins", builder =>
     {
-        builder.WithOrigins("http://localhost:4200", "http://192.168.1.11:4200", "https://cafeza-fe-c132003.netlify.app")
+        builder.WithOrigins("http://localhost:4200", "http://192.168.1.12:4200", "https://cafeza-fe-c132003.netlify.app")
                .AllowAnyMethod() // Cho phép tất cả các phương thức (GET, POST, PUT, DELETE, etc.)
                .AllowAnyHeader() // Cho phép tất cả các header
                .AllowCredentials(); // Cho phép thông tin xác thực,
