@@ -21,8 +21,6 @@ namespace Cafeza_BE.Controllers
         private readonly IMongoCollection<TableTransfer> _tableTransfer;
 
 
-        private readonly IMongoCollection<CustomerDetails> _customer;
-        private readonly IMongoCollection<EmployeeDetails> _employee;
         private readonly IMongoCollection<User> _user;
 
         private readonly IHubContext<SignalRHub> _hubContext;
@@ -32,8 +30,6 @@ namespace Cafeza_BE.Controllers
             _table = context.Tables;
             _hubContext = hubContext;
             _order = context.Orders;
-            _customer = context.CustomerDetails;
-            _employee = context.EmployeeDetails;
             _user = context.Users;
             _orderdetail = context.OrderDetails;
             _drink = context.Drinks;
@@ -55,7 +51,7 @@ namespace Cafeza_BE.Controllers
             }
             var table = await _table.Find(d => d.Id == order.TableId).FirstOrDefaultAsync();
             var customer = await _user.Find(x => x.Id == order.CustomerId).FirstOrDefaultAsync();
-            var employee = await _user.Find(x => x.Id == order.EmployeeId).FirstOrDefaultAsync();
+            var employee = await _user.Find(x => x.Id == order.UserId).FirstOrDefaultAsync();
             data.Add(new ExtenOrder
             {
                 OrderId = order.Id,
@@ -89,7 +85,6 @@ namespace Cafeza_BE.Controllers
         public class CreateOrderRequest
         {
             public OrderDTO? OrderDto { get; set; }
-            public CustomerDetailsDTO? CustomerDetailsDTO { get; set; }
             public UserDTO? UserDTO { get; set; }
 
         }
@@ -103,13 +98,6 @@ namespace Cafeza_BE.Controllers
             {
                 var newUser = ToEntityUser(request.UserDTO);
                 _user.InsertOne(newUser);
-
-                request.CustomerDetailsDTO.UserId = newUser.Id;
-
-
-                var entityCustomer = ToEntityCustomer(request.CustomerDetailsDTO);
-                await _customer.InsertOneAsync(entityCustomer);
-
                 request.OrderDto.CustomerId = newUser.Id;
             }
             // add order 
@@ -203,7 +191,7 @@ namespace Cafeza_BE.Controllers
                 CreatedAt = DateTime.Now,
                 Code = dto.Code,
                 CustomerId = dto.CustomerId,
-                EmployeeId = dto.EmployeeId,
+                UserId = dto.UserId,
                 TableId = dto.TableId,
                 TotalAmount = dto.TotalAmount,
                 PaymentMethod = dto.PaymentMethod,
@@ -213,20 +201,6 @@ namespace Cafeza_BE.Controllers
                 ChangeAmount = dto.ChangeAmount,
                 PaidAt = null,
                 Type = dto.Type,
-            };
-        }
-
-        private CustomerDetails ToEntityCustomer(CustomerDetailsDTO dto)
-        {
-            if (dto == null) return null;
-
-            return new CustomerDetails
-            {
-                UserId = dto.UserId,
-                MembershipLevel = dto.MembershipLevel ?? "Thường",
-                RewardPoints = dto.RewardPoints ?? 0,
-               
-                Note = dto.Note ?? null
             };
         }
 

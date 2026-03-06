@@ -35,7 +35,7 @@ namespace Cafeza_BE.Controllers
             _order = context.Orders;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public ActionResult<List<Drink>> GetAll()
         {

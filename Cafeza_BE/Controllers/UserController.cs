@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Cafeza_BE.DB;
@@ -13,51 +12,96 @@ namespace Cafeza_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeeController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly IMongoCollection<EmployeeDetails> _employeedetails;
         private readonly IMongoCollection<User> _user;
-        private readonly List<Employees> _employees;
+
         public class Employees
         {
             public string Email { get; set; }
             public string Password { get; set; }
             public string Roles { get; set; }
         }
-        public EmployeeController(MongoDbContext context)
+        public UserController(MongoDbContext context)
         {
             //_employee = context.Employees;
-            _employeedetails = context.EmployeeDetails;
             _user = context.Users;
-            _employees = new List<Employees>
-            {
-                new Employees { Email = "admin", Password = "admin123", Roles= "Admin" },
-                new Employees { Email = "staff@example.com", Password = "staff123", Roles = "Staff" }
-            };
         }
 
-        public class EmployeeRes
+        [HttpGet]
+        public async Task<IActionResult> GetEmployees()
         {
-            public EmployeeDetailsDTO EmployeeDetailsDTO { get; set; }
-            public UserDTO UserDTO { get; set; }
+            var users = await _user.Find(u => u.Role == "employee").ToListAsync();   
+            return Ok(users);
         }
+
 
         [HttpPost]
-        public ActionResult<Employee> Create([FromBody] EmployeeRes res)
+        public ActionResult<User> Create([FromBody] UserDTO res)
         {
-            var newUser = ToEntityUser(res.UserDTO);
+            var newUser = ToEntityUser(res);
             _user.InsertOne(newUser);
-            res.EmployeeDetailsDTO.UserId = newUser.Id;
-            var newEmployee = ToEntityEmployee(res.EmployeeDetailsDTO);
-            _employeedetails.InsertOne(newEmployee);
-            return Ok(newEmployee);
+            return Ok(newUser);
         }
 
-        private EmployeeDetails ToEntityEmployee(EmployeeDetailsDTO dto)
+
+        [HttpPut("{id}")]
+        public ActionResult<User> Update(string id, [FromBody] UserDTO dto)
         {
-            return new EmployeeDetails
+            var user = _user.Find(u => u.Id == id).FirstOrDefault();
+
+            if (user == null)
             {
-                UserId = dto.UserId,
+                return NotFound("User không tồn tại");
+            }
+
+            UpdateEntityUser(user, dto);
+
+            _user.ReplaceOne(u => u.Id == id, user);
+
+            return Ok(user);
+        }
+        private void UpdateEntityUser(User user, UserDTO dto)
+        {
+            user.FullName = dto.FullName ?? user.FullName;
+            user.PhoneNumber = dto.PhoneNumber ?? user.PhoneNumber;
+            user.Email = dto.Email ?? user.Email;
+
+            if (!string.IsNullOrEmpty(dto.Password))
+                user.Password = dto.Password;
+
+            user.Code = dto.Code ?? user.Code;
+            user.Position = dto.Position ?? user.Position;
+            user.StartDate = dto.StartDate ?? user.StartDate;
+            user.Salary = dto.Salary ?? user.Salary;
+            user.Status = dto.Status ?? user.Status;
+            user.Shift = dto.Shift ?? user.Shift;
+            user.IdentityNumber = dto.IdentityNumber ?? user.IdentityNumber;
+            user.AvatarUrl = dto.AvatarUrl ?? user.AvatarUrl;
+            user.DateOfBirth = dto.DateOfBirth ?? user.DateOfBirth;
+            user.Gender = dto.Gender ?? user.Gender;
+            user.Address = dto.Address ?? user.Address;
+            user.Role = dto.Role ?? user.Role;
+            user.MembershipLevel = dto.MembershipLevel ?? user.MembershipLevel;
+
+            if (dto.RewardPoints != null)
+                user.RewardPoints = dto.RewardPoints;
+
+            user.Note = dto.Note ?? user.Note;
+            user.IsDeleted = dto.IsDeleted ?? user.IsDeleted;
+
+            user.UpdatedAt = DateTime.Now;
+        }
+
+        private User ToEntityUser(UserDTO dto)
+        {
+            return new User
+            {
+                Id = dto.Id,
+                FullName = dto.FullName,
+                PhoneNumber = dto.PhoneNumber,
+                Email = dto.Email,
+                Password = dto.Password,
                 Code = dto.Code,
                 Position = dto.Position,
                 StartDate = dto.StartDate,
@@ -66,26 +110,20 @@ namespace Cafeza_BE.Controllers
                 Shift = dto.Shift,
                 IdentityNumber = dto.IdentityNumber,
                 AvatarUrl = dto.AvatarUrl,
-                Roles = dto.Roles ?? new List<string>(),
-            };
-        }
-
-        private User ToEntityUser(UserDTO dto)
-        {
-            return new User
-            {
-               FullName = dto.FullName,
-               PhoneNumber = dto.PhoneNumber,
-               Email = dto.Email,
-               Password = dto.Password, 
-               DateOfBirth = dto.DateOfBirth,
-               Gender = dto.Gender,
-               Address = dto.Address,
-                IsDeleted = dto.IsDeleted,
+                UpdatedAt = dto.UpdatedAt,
+                DateOfBirth = dto.DateOfBirth,
+                Gender = dto.Gender,
+                Address = dto.Address,
+                IsDeleted = dto.IsDeleted ?? false,
                 Role = dto.Role,
+                MembershipLevel = dto.MembershipLevel,
+                RewardPoints = dto.RewardPoints ?? 0,
+                Note = dto.Note,
                 CreatedAt = dto.CreatedAt ?? DateTime.Now
             };
         }
+
+
 
 
         [HttpPost("login")]
@@ -123,19 +161,8 @@ namespace Cafeza_BE.Controllers
             new Claim("id", user.Id),
             //new Claim(ClaimTypes.Role, employee.Roles)
     };
-            if(user.Role == "employee")
-            {
-                var employee = _employeedetails.Find(e => e.UserId == user.Id).FirstOrDefault();
-            // thêm từng quyền (role) làm claim
-                foreach (var role in employee.Roles)
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, role));
-                }
-            }
-            else
-            {
-                claims.Add(new Claim(ClaimTypes.Role, user.Role));
-            }
+
+            claims.Add(new Claim(ClaimTypes.Role, user.Role));
 
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("[}61L3B>z?XvzH&#!jH?b_RJ=K£lh-J7TO~c+i"));
@@ -161,7 +188,6 @@ namespace Cafeza_BE.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
             //return tokenString;
         }
-
 
     }
 }

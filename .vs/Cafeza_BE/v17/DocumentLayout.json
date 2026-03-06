@@ -3,16 +3,28 @@
   "WorkspaceRootPath": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\controllers\\drinkcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\controllers\\drinkcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\controllers\\tablecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\controllers\\tablecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\cafeza_be\\controllers\\orderdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23B937CA-C3AF-408B-9908-6F0F51F2CA28}|Cafeza_BE\\Cafeza_BE.csproj|solutionrelative:cafeza_be\\controllers\\orderdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{35134226-2FD5-476C-AD71-AF8CDD8C967B}|Model\\Model.csproj|d:\\d\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\cafeza_be\\model\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35134226-2FD5-476C-AD71-AF8CDD8C967B}|Model\\Model.csproj|solutionrelative:model\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,33 +34,15 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 6,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "Cafeza_BE\\Properties\\launchSettings.json",
-              "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Properties\\launchSettings.json",
-              "RelativeToolTip": "Cafeza_BE\\Properties\\launchSettings.json",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAABsAAABJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-08-10T14:03:44.258Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Program.cs",
-              "RelativeDocumentMoniker": "Cafeza_BE\\Program.cs",
-              "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Program.cs",
-              "RelativeToolTip": "Cafeza_BE\\Program.cs",
-              "ViewState": "AgIAAGEAAAAAAAAAAAAmwHAAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-10T14:02:46.095Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
               "$type": "Document",
@@ -58,9 +52,74 @@
               "RelativeDocumentMoniker": "Cafeza_BE\\Controllers\\DrinkController.cs",
               "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\DrinkController.cs",
               "RelativeToolTip": "Cafeza_BE\\Controllers\\DrinkController.cs",
-              "ViewState": "AgIAANwAAAAAAAAAAADwv+0AAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAACoAAAAAAAAAAAAYwFMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-09T06:39:20.461Z",
+              "WhenOpened": "2026-03-06T10:23:59.95Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TableController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\TableController.cs",
+              "RelativeDocumentMoniker": "Cafeza_BE\\Controllers\\TableController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\TableController.cs",
+              "RelativeToolTip": "Cafeza_BE\\Controllers\\TableController.cs",
+              "ViewState": "AgIAAC8AAAAAAAAAAAArwD8AAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-06T09:38:05.168Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "OrderDetailController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\OrderDetailController.cs",
+              "RelativeDocumentMoniker": "Cafeza_BE\\Controllers\\OrderDetailController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\OrderDetailController.cs",
+              "RelativeToolTip": "Cafeza_BE\\Controllers\\OrderDetailController.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAewCQAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-06T09:37:56.751Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "OrderController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\OrderController.cs",
+              "RelativeDocumentMoniker": "Cafeza_BE\\Controllers\\OrderController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\OrderController.cs",
+              "RelativeToolTip": "Cafeza_BE\\Controllers\\OrderController.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAIA1wHIAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-06T09:37:43.949Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "Cafeza_BE\\Controllers\\UserController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Cafeza_BE\\Controllers\\UserController.cs",
+              "RelativeToolTip": "Cafeza_BE\\Controllers\\UserController.cs",
+              "ViewState": "AgIAAEkAAAAAAAAAAIAwwF0AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-06T09:31:23.874Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Model\\User.cs",
+              "RelativeDocumentMoniker": "Model\\User.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00E1n qu\u1EA3n l\u00FD cafe\\Cafeza_BE\\Model\\User.cs",
+              "RelativeToolTip": "Model\\User.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAAAAEUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-06T09:52:26.451Z",
               "EditorCaption": ""
             }
           ]

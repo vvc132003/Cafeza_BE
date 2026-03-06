@@ -15,8 +15,6 @@ namespace Cafeza_BE.Controllers
         private readonly IMongoCollection<Order> _order;
         private readonly IMongoCollection<OrderDetail> _orderDetail;
         private readonly IMongoCollection<Drink> _drink;
-        private readonly IMongoCollection<CustomerDetails> _customer;
-        private readonly IMongoCollection<EmployeeDetails> _employee;
         private readonly IMongoCollection<User> _user;
 
         private readonly IHubContext<SignalRHub> _hubContext;
@@ -26,8 +24,6 @@ namespace Cafeza_BE.Controllers
             _table = context.Tables;
             _hubContext = hubContext;
             _order = context.Orders;
-            _customer = context.CustomerDetails;
-            _employee = context.EmployeeDetails;
             _orderDetail = context.OrderDetails;
             _drink = context.Drinks;
             _user = context.Users;

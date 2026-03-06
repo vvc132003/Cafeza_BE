@@ -15,8 +15,8 @@ namespace Model
         public string Id { get; set; }
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public string? Code { get; set; } 
-        public string? CustomerId { get; set; }   // Có thể null nếu khách lẻ
-        public string? EmployeeId { get; set; }   // Người tạo đơn
+        public string? CustomerId { get; set; }  
+        public string? UserId { get; set; }   // Người tạo đơn
         public string? TableId { get; set; }      // Bàn nào (nếu tại quán)
         public decimal? TotalAmount { get; set; }
         public decimal? AmountPaid { get; set; }      // Khách trả bao nhiêu
@@ -34,8 +34,8 @@ namespace Model
         public string? Id { get; set; }
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public string? Code { get; set; }
-        public string? CustomerId { get; set; }   // Có thể null nếu khách lẻ
-        public string? EmployeeId { get; set; }   // Người tạo đơn
+        public string? CustomerId { get; set; }
+        public string? UserId { get; set; }   // Người tạo đơn
         public string? TableId { get; set; }      // Bàn nào (nếu tại quán)
         public decimal? TotalAmount { get; set; }
         public decimal? AmountPaid { get; set; }      // Khách trả bao nhiêu
